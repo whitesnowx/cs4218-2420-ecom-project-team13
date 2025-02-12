@@ -1,6 +1,7 @@
-import { jest } from "@jest/globals";
-import { createCategoryController } from "./categoryController";
+import { expect, jest } from "@jest/globals";
+import { createCategoryController, updateCategoryController } from "./categoryController";
 import categoryModel from "../models/categoryModel";
+import slugify from "slugify";
 
 jest.unstable_mockModule("../models/categoryModel.js", () => ({
     default: jest.fn(),
@@ -72,4 +73,70 @@ describe("Create Category Controller Test", () => {
             message: "Category Already Exists",
         });
     });
+});
+
+
+
+describe("Update Category Controller Test", () => {
+    let req, res;
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+        req = {
+            params: {id: "123"},
+            body: {name: "Category Updated"},
+        };
+
+        res = {
+            status: jest.fn().mockReturnThis(),
+            send: jest.fn(),
+        };
+    });
+
+    test("should update category if exists", async () => {
+        categoryModel.findByIdAndUpdate = jest.fn().mockResolvedValue({
+            _id: "123",
+            name: "Category Updated",
+            slug: slugify("Category Updated"),
+        });
+
+        await updateCategoryController(req, res);
+
+        expect(categoryModel.findByIdAndUpdate).toHaveBeenCalledWith(
+            "123",
+            {name: "Category Updated", slug: slugify("Category Updated")},
+            {new: true}
+        );
+        
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.send).toHaveBeenCalledWith({
+            success: true,
+            message: "Category Updated Successfully",
+            category: {
+                _id: "123",
+                name: "Category Updated",
+                slug: slugify("Category Updated"),
+            },
+        });
+    });
+
+    test("should return error message when category is not found", async() => {
+        categoryModel.findByIdAndUpdate = jest.fn().mockResolvedValue(null);
+
+        await updateCategoryController(req, res);;
+
+        expect(categoryModel.findByIdAndUpdate).toHaveBeenCalledWith(
+            "123",
+            {name: "Category Updated", slug: slugify("Category Updated")},
+            {new: true}
+        );
+
+        expect(res.status).toHaveBeenCalledWith(404);
+        expect(res.send).toHaveBeenCalledWith({
+            success: false,
+            message: "Category not found",
+            error: "Category not found while updating",
+        });
+    });
+
 });
