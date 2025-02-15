@@ -1,5 +1,5 @@
 import { expect, jest } from "@jest/globals";
-import { createCategoryController, updateCategoryController } from "./categoryController";
+import { categoryControlller, createCategoryController, deleteCategoryCOntroller, singleCategoryController, updateCategoryController } from "./categoryController";
 import categoryModel from "../models/categoryModel";
 import slugify from "slugify";
 
@@ -140,3 +140,176 @@ describe("Update Category Controller Test", () => {
     });
 
 });
+
+
+
+describe("Get All Categories Controller Test", () => {
+    let req, res;
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+        req = {};
+        res = {
+            status: jest.fn().mockReturnThis(),
+            send: jest.fn(),
+        };
+    });
+
+    test("should get all categories", async() => {
+        categoryModel.find = jest.fn().mockResolvedValue([
+            {_id: "1", name: "Clothes", slug: "clothes"},
+            {_id: "2", name: "Books", slug: "books"}
+        ]);
+
+        await categoryControlller(req, res);
+
+        expect(categoryModel.find).toHaveBeenCalledWith({});
+
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.send).toHaveBeenCalledWith({
+            success: true,
+            message: "All Categories List",
+            category : [
+                {_id: "1", name: "Clothes", slug: "clothes"},
+                {_id: "2", name: "Books", slug: "books"}
+            ],
+        });
+    });
+
+
+    test("should return status 500 for errors", async() => {
+        categoryModel.find = jest.fn().mockRejectedValue(new Error("Testing Error while getting all categories"));
+
+        await categoryControlller(req, res);
+
+        expect(categoryModel.find).toHaveBeenCalledWith({});
+
+        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.send).toHaveBeenCalledWith({
+            success: false,
+            error: expect.anything(),
+            message: "Error while getting all categories",
+        });
+    });
+
+});
+
+
+describe("Get Single Category Controller Test", () => {
+    let req, res;
+    
+    beforeEach(() => {
+        jest.clearAllMocks();
+        req = {
+            params: {slug: "books"}
+        };
+
+        res = {
+            status: jest.fn().mockReturnThis(),
+            send: jest.fn(),
+        };
+    });
+
+    test("should return a single category when found", async () => {
+        categoryModel.findOne = jest.fn().mockResolvedValue({
+            _id: "1",
+            name: "Books",
+            slug: "books",
+        });
+        
+        await singleCategoryController(req, res);
+
+        expect(categoryModel.findOne).toHaveBeenCalledWith({slug: "books"});
+
+        expect(res.status).toHaveBeenCalledWith(200);
+
+        expect(res.send).toHaveBeenCalledWith({
+            success: true,
+            message: "Get SIngle Category SUccessfully",
+            category: {
+                _id: "1",
+                name: "Books",
+                slug: "books",
+            },
+        });
+        
+    });
+
+
+
+    test("should return status 500 when an error occurs while getting a single category", async () => {
+        categoryModel.findOne = jest.fn().mockRejectedValue(new Error("Testing Error while getting a single category"));
+        
+        await singleCategoryController(req, res);
+
+        expect(categoryModel.findOne).toHaveBeenCalledWith({slug: "books"});
+
+        expect(res.status).toHaveBeenCalledWith(500);
+
+        expect(res.send).toHaveBeenCalledWith({
+            success: false,
+            error: expect.anything(),
+            message: "Error While getting Single Category",
+        });
+        
+    });
+
+
+});
+
+
+
+
+describe("Delete Category Controller Test", () => {
+    let req, res;
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+        req = {
+            params: {id: "1"}
+        };
+
+        res = {
+            status: jest.fn().mockReturnThis(),
+            send: jest.fn(),
+        };
+    });
+
+    test("should delete a category when found", async () => {
+        categoryModel.findByIdAndDelete = jest.fn().mockResolvedValue({
+            _id: "1",
+            name: "Books",
+            slug: "books",
+        });
+
+        await deleteCategoryCOntroller(req, res);
+
+        expect(categoryModel.findByIdAndDelete).toHaveBeenLastCalledWith("1");
+
+        expect(res.status).toHaveBeenCalledWith(200);
+
+        expect(res.send).toHaveBeenCalledWith({
+            success: true,
+            message: "Category Deleted Successfully",
+        });
+    });
+
+
+
+    test("should return status 500 when an error occurs while deleting a single category", async () => {
+        categoryModel.findByIdAndDelete = jest.fn().mockRejectedValue(new Error("Testing Error while deleting a single category"));
+
+        await deleteCategoryCOntroller(req, res);
+
+        expect(categoryModel.findByIdAndDelete).toHaveBeenLastCalledWith("1");
+
+        expect(res.status).toHaveBeenCalledWith(500);
+
+        expect(res.send).toHaveBeenCalledWith({
+            success: false,
+            message: "error while deleting category",
+            error: expect.anything(),
+        });
+    });
+});
+
