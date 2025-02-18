@@ -1,6 +1,6 @@
-import { afterEach, beforeAll, expect, jest, test } from '@jest/globals'
+import { afterEach, beforeAll, expect, jest, test } from "@jest/globals";
 import mongoose from "mongoose";
-import connectDB from './db';
+import connectDB from "./db";
 
 describe("Mongoose Database", () => {
     let mongooseConnectSpy, consoleLogSpy;
@@ -35,7 +35,7 @@ describe("Mongoose Database", () => {
 
     test("should return an error if db url is missing", async () => {
         // Arrange 
-        const mockError = new Error('Connection failed');
+        const mockError = new Error("Connection failed");
         mongooseConnectSpy.mockRejectedValue(mockError);
 
         // Act
