@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { hashPassword } from "./authHelper";
+import { comparePassword, hashPassword } from "./authHelper";
 
 jest.mock("bcrypt");
 
@@ -35,3 +35,36 @@ describe("Hash Password Test", () => {
         expect(console.log).toHaveBeenCalledWith(mockError);
     });
 });
+
+describe("Compare Password Test", () => {
+    let password, hashedPassword;
+    beforeEach(() => {
+        jest.clearAllMocks();
+        password = "password123"
+        hashedPassword = "hashedPassword"
+    });
+
+    it("should return true for matching passwords", async () => {
+        // Arrange
+        bcrypt.compare.mockResolvedValue(true);
+
+        // Act
+        const result = await comparePassword(password, hashedPassword);
+
+        // Assert
+        expect(bcrypt.compare).toHaveBeenCalledWith(password, hashedPassword);
+        expect(result).toBe(true);
+    });
+
+    it("should return true for matching passwords", async () => {
+        // Arrange
+        bcrypt.compare.mockResolvedValue(false);
+
+        // Act
+        const result = await comparePassword(password, hashedPassword);
+
+        // Assert
+        expect(bcrypt.compare).toHaveBeenCalledWith(password, hashedPassword);
+        expect(result).toBe(false);
+    });
+})
