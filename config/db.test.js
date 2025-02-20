@@ -7,7 +7,7 @@ describe("Mongoose Database", () => {
 
     beforeAll(() => {
         mongooseConnectSpy = jest.spyOn(mongoose, "connect");
-        consoleLogSpy = jest.spyOn(console, "log");
+        console.log = jest.fn();
     })
 
     afterEach(() => {
@@ -30,7 +30,7 @@ describe("Mongoose Database", () => {
         const dbURL = mongooseConnectSpy.mock.calls[0][0];
         expect(dbURL).toMatch(process.env.MONGO_URL);
         expect(mongooseConnectSpy).toHaveBeenCalledWith(dbURL);
-        expect(consoleLogSpy).toHaveBeenCalledWith(`Connected To Mongodb Database ${process.env.MONGO_URL}`.bgMagenta.white);
+        expect(console.log).toHaveBeenCalledWith(`Connected To Mongodb Database ${process.env.MONGO_URL}`.bgMagenta.white);
     });
 
     test("should return an error if db url is missing", async () => {
@@ -43,7 +43,7 @@ describe("Mongoose Database", () => {
 
         // Assert
         expect(mongooseConnectSpy).toHaveBeenCalled();
-        expect(consoleLogSpy).toHaveBeenCalledWith(`Error in Mongodb ${mockError}`.bgRed.white);
+        expect(console.log).toHaveBeenCalledWith(`Error in Mongodb ${mockError}`.bgRed.white);
     });
 
 });
