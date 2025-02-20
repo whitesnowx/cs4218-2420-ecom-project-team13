@@ -1,4 +1,4 @@
-import { forgotPasswordController, loginController, registerController } from "./authController";
+import { forgotPasswordController, loginController, registerController, testController } from "./authController";
 import userModel from "../models/userModel";
 import { comparePassword, hashPassword } from "../helpers/authHelper";
 import JWT from "jsonwebtoken";
@@ -33,7 +33,6 @@ describe("Register Controller Test", () => {
         answer: validUser.answer
       }
     };
-
     res = {
       status: jest.fn().mockReturnThis(),
       send: jest.fn()
@@ -145,11 +144,13 @@ describe("Register Controller Test", () => {
     // Arrange 
     const mockError = new Error("mock error");
     userModel.findOne = jest.fn().mockRejectedValue(mockError);
+    console.log = jest.fn();
 
     // Act
     await registerController(req, res);
 
     // Assert
+    expect(console.log).toHaveBeenCalledWith(mockError);
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.send).toHaveBeenCalledWith({
       success: false,
@@ -170,7 +171,6 @@ describe("Login Controller Test", () => {
         password: validUser.password,
       }
     };
-
     res = {
       status: jest.fn().mockReturnThis(),
       send: jest.fn()
@@ -268,11 +268,13 @@ describe("Login Controller Test", () => {
     // Arrange 
     const mockError = new Error("mock error");
     userModel.findOne = jest.fn().mockRejectedValue(mockError);
+    console.log = jest.fn();
 
     // Act
     await loginController(req, res);
 
     // Assert
+    expect(console.log).toHaveBeenCalledWith(mockError);
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.send).toHaveBeenCalledWith({
       success: false,
@@ -294,7 +296,6 @@ describe("Forgot Password Controller Test", () => {
         newPassword: "Password123"
       }
     };
-
     res = {
       status: jest.fn().mockReturnThis(),
       send: jest.fn()
@@ -373,16 +374,55 @@ describe("Forgot Password Controller Test", () => {
     // Arrange
     const mockError = new Error("mock error");
     userModel.findOne = jest.fn().mockRejectedValue(mockError);
+    console.log = jest.fn();
 
     // Act
     await forgotPasswordController(req, res);
 
     // Assert
+    expect(console.log).toHaveBeenCalledWith(mockError);
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.send).toHaveBeenCalledWith({
       success: false,
       message: "Something went wrong",
       error: mockError
     });
+  });
+});
+
+describe("Test Controller Test", () => {
+  let req, res;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    req = {};
+    res = {
+      send: jest.fn()
+    };
+  });
+
+  it("should return Protected Routes", async () => {
+    // Arrange
+    // Act
+    await testController(req, res);
+
+    // Assert
+    expect(res.send).toHaveBeenCalledWith("Protected Routes");
+  });
+
+  it("should return an error", async () => {
+    // Arrange
+    const mockError = new Error("mock error");
+    console.log = jest.fn(); // Mock console.log to prevent actual logging
+    res.send.mockImplementationOnce(() => {
+      throw mockError;
+    });
+
+    // Act
+    await testController(req, res);
+
+    // Assert
+    expect(console.log).toHaveBeenCalledWith(mockError);
+    expect(res.send).toHaveBeenCalledWith({ error: mockError });
   });
 });
