@@ -9,6 +9,7 @@ describe("Require Sign In Test", () => {
     let req, res, next;
 
     beforeEach(() => {
+        jest.clearAllMocks();
         req = {
             headers: {
                 authorization: ""
@@ -66,6 +67,7 @@ describe("Is Admin Test", () => {
     }
 
     beforeEach(() => {
+        jest.clearAllMocks();
         req = {
             user: {
                 _id: user._id
