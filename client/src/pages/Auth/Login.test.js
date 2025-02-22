@@ -9,6 +9,10 @@ import Login from './Login';
 // Mocking axios.post
 jest.mock('axios');
 jest.mock('react-hot-toast');
+jest.mock("../../components/Layout", () => ({
+  __esModule: true,
+  default: ({ children }) => <div>{children}</div>,
+}));
 
 jest.mock('../../context/auth', () => ({
     useAuth: jest.fn(() => [null, jest.fn()]) // Mock useAuth hook to return null state and a mock function for setAuth
