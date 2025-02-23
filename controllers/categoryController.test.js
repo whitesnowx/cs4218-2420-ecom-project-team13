@@ -3,9 +3,11 @@ import { categoryControlller, createCategoryController, deleteCategoryCOntroller
 import categoryModel from "../models/categoryModel";
 import slugify from "slugify";
 
-jest.unstable_mockModule("../models/categoryModel.js", () => ({
-    default: jest.fn(),
-}));
+// jest.unstable_mockModule("../models/categoryModel.js", () => ({
+//     default: jest.fn(),
+// }));
+
+jest.mock("../models/categoryModel.js");
 
 describe("Create Category Controller Test", () => {
     let req, res;
@@ -73,6 +75,33 @@ describe("Create Category Controller Test", () => {
             message: "Category Already Exists",
         });
     });
+
+    test("should not save new category model when the name is not provided", async() => {
+        const emptyRequest = {
+            body: {},
+        }
+
+        await createCategoryController(emptyRequest, res);
+
+        expect(res.status).toHaveBeenCalledWith(401);
+        expect(res.send).toHaveBeenCalledWith({
+            message: "Name is required",
+        });
+    });
+
+    test("should not save new category model when there is an error", async() => {
+        categoryModel.prototype.save = jest.fn().mockRejectedValue(new Error("Database Error"));
+
+        await createCategoryController(res, res);
+
+        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.send).toHaveBeenCalledWith({
+            success: false,
+            error: expect.any(Error),
+            message: "Errro in Category",
+        });
+    });
+
 });
 
 
@@ -136,6 +165,20 @@ describe("Update Category Controller Test", () => {
             success: false,
             message: "Category not found",
             error: "Category not found while updating",
+        });
+    });
+
+
+    test("should not save new category model when there is an error", async() => {
+        categoryModel.findByIdAndUpdate = jest.fn().mockRejectedValue(new Error("Database Error"));
+
+        await updateCategoryController(res, res);
+
+        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.send).toHaveBeenCalledWith({
+            success: false,
+            error: expect.any(Error),
+            message: "Error while updating category",
         });
     });
 
