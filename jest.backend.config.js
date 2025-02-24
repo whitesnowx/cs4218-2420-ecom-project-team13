@@ -13,7 +13,8 @@ export default {
   // which test to run
   testMatch: [
     "<rootDir>/controllers/*.test.js",
-    "<rootDir>/config/*.test.js"
+    "<rootDir>/config/*.test.js",
+    "<rootDir>/helpers/*.test.js",
   ],
 
   // configure dotenv file
@@ -24,6 +25,7 @@ export default {
   collectCoverageFrom: [
     "controllers/**",
     "config/**",
+    "helpers/**",
   ],
   coverageThreshold: {
     global: {
