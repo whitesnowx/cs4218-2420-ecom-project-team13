@@ -15,6 +15,7 @@ export default {
     "<rootDir>/controllers/*.test.js",
     "<rootDir>/config/*.test.js",
     "<rootDir>/helpers/*.test.js",
+    "<rootDir>/middlewares/*.test.js",
   ],
 
   // configure dotenv file
@@ -26,6 +27,7 @@ export default {
     "controllers/**",
     "config/**",
     "helpers/**",
+    "middlewares/**"
   ],
   coverageThreshold: {
     global: {
