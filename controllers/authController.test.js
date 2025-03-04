@@ -1,10 +1,12 @@
 import {
   forgotPasswordController,
+  getAllOrdersController,
   getOrdersController,
   loginController,
   registerController,
   testController,
-  updateProfileController } from "./authController";
+  updateProfileController
+} from "./authController";
 import userModel from "../models/userModel";
 import orderModel from "../models/orderModel";
 import { comparePassword, hashPassword } from "../helpers/authHelper";
@@ -618,6 +620,112 @@ describe("Auth Controller", () => {
       expect(res.send).toHaveBeenCalledWith({
         success: false,
         message: "Error while getting orders",
+        error: mockError
+      });
+    });
+  });
+
+  describe("Get All Orders Controller Test", () => {
+    let req, res;
+
+    beforeEach(() => {
+      jest.clearAllMocks();
+      res = {
+        status: jest.fn().mockReturnThis(),
+        send: jest.fn(),
+        json: jest.fn()
+      };
+    });
+
+    it("should successfully return all orders", async () => {
+      // Arrange
+      req = {
+        user: {
+          _id: validUser._id
+        }
+      };
+
+      const mockOrders = {
+        "_id": {
+          "$oid": "67a21938cf4efddf1e5358d1"
+        },
+        "products": [
+          {
+            "$oid": "67a21772a6d9e00ef2ac022a"
+          },
+          {
+            "$oid": "66db427fdb0119d9234b27f3"
+          },
+          {
+            "$oid": "66db427fdb0119d9234b27f3"
+          }
+        ],
+        "payment": {},
+        "buyer": {},
+        "status": "Not Process",
+        "createdAt": {},
+        "updatedAt": {},
+        "__v": 0
+      }
+
+      const mockPopulate = jest.fn().mockReturnThis();
+      const mockSort = jest.fn().mockReturnValue(mockOrders);
+
+      orderModel.find = jest.fn().mockReturnValue({
+        populate: mockPopulate,
+        sort: mockSort
+      });
+
+      // Act
+      await getAllOrdersController(req, res);
+
+      // Assert
+      expect(orderModel.find).toHaveBeenCalledWith({});
+      expect(mockPopulate).toHaveBeenCalledWith([
+        { path: "products", select: "-photo" },
+        { path: "buyer", select: "name" }
+      ]);
+      expect(mockSort).toHaveBeenCalledWith({
+        createdAt: -1
+      })
+      expect(res.json).toHaveBeenCalledWith(mockOrders);
+    });
+
+    it("should return an error", async () => {
+      // Arrange
+      req = {
+        user: {
+          _id: validUser._id
+        }
+      };
+      console.log = jest.fn();
+
+      const mockError = new Error("mock error");
+
+      const mockPopulate = jest.fn().mockReturnThis();
+      const mockSort = jest.fn().mockRejectedValue(mockError);
+      orderModel.find = jest.fn().mockReturnValue({
+        populate: mockPopulate,
+        sort: mockSort
+      });
+
+      // Act
+      await getAllOrdersController(req, res);
+
+      // Assert
+      expect(orderModel.find).toHaveBeenCalledWith({});
+      expect(mockPopulate).toHaveBeenCalledWith([
+        { path: "products", select: "-photo" },
+        { path: "buyer", select: "name" }
+      ]);
+      expect(mockSort).toHaveBeenCalledWith({
+        createdAt: -1
+      })
+      expect(console.log).toHaveBeenCalledWith(mockError);
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.send).toHaveBeenCalledWith({
+        success: false,
+        message: "Error while getting all orders",
         error: mockError
       });
     });
