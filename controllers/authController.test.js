@@ -3,6 +3,7 @@ import {
   getAllOrdersController,
   getOrdersController,
   loginController,
+  orderStatusController,
   registerController,
   testController,
   updateProfileController
@@ -726,6 +727,91 @@ describe("Auth Controller", () => {
       expect(res.send).toHaveBeenCalledWith({
         success: false,
         message: "Error while getting all orders",
+        error: mockError
+      });
+    });
+  });
+
+  describe("Order Status Controller Test", () => {
+    let req, res;
+
+    beforeEach(() => {
+      jest.clearAllMocks();
+      req = {
+        body: {
+          status: "Processing"
+        },
+        params: {
+          orderId: 123
+        }
+      };
+      res = {
+        status: jest.fn().mockReturnThis(),
+        send: jest.fn(),
+        json: jest.fn()
+      };
+    });
+
+    it("should successfully update order status", async () => {
+      // Arrange
+      const mockOrders = {
+        "_id": {
+          "$oid": "67a21938cf4efddf1e5358d1"
+        },
+        "products": [
+          {
+            "$oid": "67a21772a6d9e00ef2ac022a"
+          },
+          {
+            "$oid": "66db427fdb0119d9234b27f3"
+          },
+          {
+            "$oid": "66db427fdb0119d9234b27f3"
+          }
+        ],
+        "payment": {},
+        "buyer": {},
+        "status": "Processing",
+        "createdAt": {},
+        "updatedAt": {},
+        "__v": 0
+      }
+
+      orderModel.findByIdAndUpdate = jest.fn().mockResolvedValue(mockOrders);
+
+      // Act
+      await orderStatusController(req, res);
+
+      // Assert
+      expect(orderModel.findByIdAndUpdate).toHaveBeenCalledWith(
+        req.params.orderId,
+        { status: req.body.status },
+        { new: true }
+      );
+      expect(res.json).toHaveBeenCalledWith(mockOrders);
+    });
+
+    it("should return an error", async () => {
+      // Arrange
+      console.log = jest.fn();
+      const mockError = new Error("mock error");
+
+      orderModel.findByIdAndUpdate = jest.fn().mockRejectedValue(mockError);
+
+      // Act
+      await orderStatusController(req, res);
+
+      // Assert
+      expect(orderModel.findByIdAndUpdate).toHaveBeenCalledWith(
+        req.params.orderId,
+        { status: req.body.status },
+        { new: true }
+      );
+      expect(console.log).toHaveBeenCalledWith(mockError);
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.send).toHaveBeenCalledWith({
+        success: false,
+        message: "Error while updating order status",
         error: mockError
       });
     });
