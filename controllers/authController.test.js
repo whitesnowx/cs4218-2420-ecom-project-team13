@@ -667,7 +667,7 @@ describe("Auth Controller", () => {
         "createdAt": {},
         "updatedAt": {},
         "__v": 0
-      }
+      };
 
       const mockPopulate = jest.fn().mockReturnThis();
       const mockSort = jest.fn().mockReturnValue(mockOrders);
@@ -688,7 +688,7 @@ describe("Auth Controller", () => {
       ]);
       expect(mockSort).toHaveBeenCalledWith({
         createdAt: -1
-      })
+      });
       expect(res.json).toHaveBeenCalledWith(mockOrders);
     });
 
@@ -721,7 +721,7 @@ describe("Auth Controller", () => {
       ]);
       expect(mockSort).toHaveBeenCalledWith({
         createdAt: -1
-      })
+      });
       expect(console.log).toHaveBeenCalledWith(mockError);
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.send).toHaveBeenCalledWith({
