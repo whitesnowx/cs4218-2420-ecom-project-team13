@@ -172,7 +172,7 @@ describe('Login Component', () => {
     expect(toast.error).toHaveBeenCalledWith("Invalid Credentials");
   })
 
-  it('should login the user successfully', async () => {
+  it('renders page not found when clicking forgot password ', async () => {
     const { getByText } = render(
       <MemoryRouter initialEntries={['/login']}>
         <Routes>
