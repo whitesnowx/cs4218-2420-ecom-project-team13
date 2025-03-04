@@ -227,15 +227,16 @@ export const getAllOrdersController = async (req, res) => {
   try {
     const orders = await orderModel
       .find({})
-      .populate("products", "-photo")
-      .populate("buyer", "name")
-      .sort({ createdAt: "-1" });
+      .populate([
+        { path: "products", select: "-photo" },
+        { path: "buyer", select: "name" }
+      ]).sort({ createdAt: -1 });
     res.json(orders);
   } catch (error) {
     console.log(error);
     res.status(500).send({
       success: false,
-      message: "Error WHile Geting Orders",
+      message: "Error while getting all orders",
       error,
     });
   }
