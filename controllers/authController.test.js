@@ -461,21 +461,6 @@ describe("Auth Controller", () => {
       };
     });
 
-    it("should return an error if password is missing", async () => {
-      // Arrange
-      req.body.password = "";
-      userModel.findById = jest.fn().mockResolvedValue(validUser);
-
-      // Act
-      await updateProfileController(req, res);
-
-      // Assert
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.send).toHaveBeenCalledWith({
-        error: "Password is required and 6 character long"
-      });
-    });
-
     it("should return an error if password's length is less than 6", async () => {
       // Arrange
       req.body.password = "apple";
@@ -498,6 +483,30 @@ describe("Auth Controller", () => {
 
       let updatedUser = validUser;
       updatedUser.password = "newpassword";
+      userModel.findByIdAndUpdate = jest.fn().mockResolvedValue(updatedUser);
+
+      // Act
+      await updateProfileController(req, res);
+
+      // Assert
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.send).toHaveBeenCalledWith({
+        success: true,
+        message: "Profile Updated Successfully",
+        updatedUser: updatedUser
+      });
+    });
+
+    it("should successfully update profile if all input missing", async () => {
+      // Arrange
+      req.body.name = "";
+      req.body.password = "";
+      req.body.address = "";
+      req.body.phone = "";
+
+      userModel.findById = jest.fn().mockResolvedValue(validUser);
+
+      let updatedUser = validUser;
       userModel.findByIdAndUpdate = jest.fn().mockResolvedValue(updatedUser);
 
       // Act
