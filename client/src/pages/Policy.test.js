@@ -4,7 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 import "@testing-library/jest-dom/extend-expect";
 import Policy from './Policy'
 
-jest.mock("./../components/Layout", () => ({
+jest.mock("../components/Layout", () => ({
     __esModule: true,
     default: ({ title, children }) => (
         <div>

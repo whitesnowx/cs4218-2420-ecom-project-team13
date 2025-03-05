@@ -13,6 +13,13 @@ jest.mock("../../context/auth", () => ({
   useAuth: jest.fn(),
 }));
 
+jest.mock("../Spinner", () => {
+  return {
+    __esModule: true,
+    default: () => <div data-testid="spinner">Mocked Spinner</div>,
+  };
+});
+
 describe("PrivateRoute Component", () => {
   beforeEach(() => {
     jest.clearAllMocks();
