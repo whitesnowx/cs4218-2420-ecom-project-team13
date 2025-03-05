@@ -20,6 +20,7 @@ export default {
   transformIgnorePatterns: ["/node_modules/(?!(styleMock\\.js)$)"],
 
   // only run these tests
+
   testMatch: [
     "<rootDir>/client/src/pages/Auth/*.test.js",
     "<rootDir>/client/src/hooks/*.test.js",
@@ -32,11 +33,14 @@ export default {
   collectCoverage: true,
   collectCoverageFrom: [
     "client/src/pages/Auth/**",
+    "client/src/pages/user/**",
+    "client/src/pages/**",
     "client/src/hooks/**",
     "client/src/context/auth.{js,jsx}", // Only running auth in context
-    "client/src/components/Form/**",
+    "client/src/components/**",
     "client/src/pages/admin/**",
   ],
+
   coverageThreshold: {
     global: {
       lines: 100,
