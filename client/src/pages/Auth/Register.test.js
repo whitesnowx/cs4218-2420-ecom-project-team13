@@ -10,16 +10,16 @@ import Register from "./Register";
 jest.mock("axios");
 jest.mock("react-hot-toast");
 
-jest.mock("../../context/auth", () => ({
-  useAuth: jest.fn(() => [null, jest.fn()]), // Mock useAuth hook to return null state and a mock function for setAuth
+jest.mock('../../context/auth', () => ({
+  useAuth: jest.fn(() => [null, jest.fn()]) // Mock useAuth hook to return null state and a mock function for setAuth
 }));
 
-jest.mock("../../context/cart", () => ({
-  useCart: jest.fn(() => [null, jest.fn()]), // Mock useCart hook to return null state and a mock function
+jest.mock('../../context/cart', () => ({
+  useCart: jest.fn(() => [null, jest.fn()]) // Mock useCart hook to return null state and a mock function
 }));
 
-jest.mock("../../context/search", () => ({
-  useSearch: jest.fn(() => [{ keyword: "" }, jest.fn()]), // Mock useSearch hook to return null state and a mock function
+jest.mock('../../context/search', () => ({
+  useSearch: jest.fn(() => [{ keyword: '' }, jest.fn()]) // Mock useSearch hook to return null state and a mock function
 }));
 
 jest.mock("../../hooks/useCategory", () => jest.fn(() => []));
@@ -53,7 +53,11 @@ describe("Register Component", () => {
     axios.post.mockResolvedValueOnce({ data: { success: true } });
 
     const { getByText, getByPlaceholderText } = render(
+<<<<<<< HEAD
       <MemoryRouter initialEntries={["/register"]}>
+=======
+      <MemoryRouter initialEntries={['/register']}>
+>>>>>>> 3f5a713b5c6862709713e5c4dcf10c93995a62d4
         <Routes>
           <Route path="/register" element={<Register />} />
         </Routes>
@@ -90,11 +94,20 @@ describe("Register Component", () => {
     );
   });
 
+<<<<<<< HEAD
   it("should display error message on failed registration", async () => {
     axios.post.mockRejectedValueOnce({ message: "User already exists" });
 
     const { getByText, getByPlaceholderText } = render(
       <MemoryRouter initialEntries={["/register"]}>
+=======
+  it('should display error message on failed registration', async () => {
+    axios.post.mockRejectedValueOnce({ message: 'User already exists' });
+    console.log = jest.fn();
+
+    const { getByText, getByPlaceholderText } = render(
+      <MemoryRouter initialEntries={['/register']}>
+>>>>>>> 3f5a713b5c6862709713e5c4dcf10c93995a62d4
         <Routes>
           <Route path="/register" element={<Register />} />
         </Routes>
@@ -126,6 +139,42 @@ describe("Register Component", () => {
     fireEvent.click(getByText("REGISTER"));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalled());
+<<<<<<< HEAD
     expect(toast.error).toHaveBeenCalledWith("Something went wrong");
+=======
+    expect(console.log).toHaveBeenCalledWith({ message: "User already exists" });
+    expect(toast.error).toHaveBeenCalledWith('Something went wrong');
+>>>>>>> 3f5a713b5c6862709713e5c4dcf10c93995a62d4
   });
+
+  it("should display error message due to invalid credentials", async () => {
+    axios.post.mockResolvedValueOnce({
+      data: {
+        success: false,
+        message: "Invalid Credentials"
+      },
+      status: 401
+    });
+
+    const { getByPlaceholderText, getByText } = render(
+      <MemoryRouter initialEntries={['/register']}>
+        <Routes>
+          <Route path="/register" element={<Register />} />
+        </Routes>
+      </MemoryRouter>
+    );
+
+    fireEvent.change(getByPlaceholderText('Enter Your Name'), { target: { value: 'John Doe' } });
+    fireEvent.change(getByPlaceholderText('Enter Your Email'), { target: { value: 'test@example.com' } });
+    fireEvent.change(getByPlaceholderText('Enter Your Password'), { target: { value: 'password123' } });
+    fireEvent.change(getByPlaceholderText('Enter Your Phone'), { target: { value: '1234567890' } });
+    fireEvent.change(getByPlaceholderText('Enter Your Address'), { target: { value: '123 Street' } });
+    fireEvent.change(getByPlaceholderText('Enter Your DOB'), { target: { value: '2000-01-01' } });
+    fireEvent.change(getByPlaceholderText('What is Your Favorite sports'), { target: { value: 'Football' } });
+
+    fireEvent.click(getByText('REGISTER'));
+
+    await waitFor(() => expect(axios.post).toHaveBeenCalled());
+    expect(toast.error).toHaveBeenCalledWith("Invalid Credentials");
+  })
 });
