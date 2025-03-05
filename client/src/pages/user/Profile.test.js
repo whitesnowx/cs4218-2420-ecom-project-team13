@@ -117,7 +117,7 @@ describe("Profile Component", () => {
   });
 
   it("display error if error in updating profile", async () => {
-    const consoleSpy = jest.spyOn(console, "log");
+    console.log = jest.fn();
     axios.put.mockRejectedValue(new Error("Error updating profile"));
 
     const { getByText, getByPlaceholderText } = render(
@@ -132,10 +132,9 @@ describe("Profile Component", () => {
     fireEvent.click(getByText("UPDATE"));
 
     await waitFor(() => {
-      expect(consoleSpy).toHaveBeenCalledWith(expect.any(Error));
+      expect(console.log).toHaveBeenCalledWith(expect.any(Error));
     });
     expect(toast.error).toHaveBeenCalledWith("Something went wrong");
 
-    consoleSpy.mockRestore();
   });
 });

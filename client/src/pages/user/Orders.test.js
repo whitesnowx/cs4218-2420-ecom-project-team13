@@ -24,17 +24,17 @@ jest.mock("../../context/search", () => ({
 describe("Orders Component", () => {
   const mockOrders = [
     {
-      id: "1",
+      _id: "1",
       status: "Completed",
       buyer: { name: "John Doe" },
-      createAt: new Date("2025-02-17T12:00:00Z"),
+      createdAt: new Date("2025-02-17T12:00:00Z"),
       payment: { success: true },
       products: [
         {
-          id: "p1",
+          _id: "p1",
           name: "Product 1",
           description: "Description 1",
-          price: 250,
+          price: 250
         },
       ],
     },
@@ -62,7 +62,7 @@ describe("Orders Component", () => {
         await screen.findByText(mockOrders[0].buyer.name)
       ).toBeInTheDocument();
       expect(
-        await screen.findByText(moment(mockOrders[0].createAt).fromNow())
+        await screen.findByText(moment(mockOrders[0].createdAt).fromNow())
       ).toBeInTheDocument();
       expect(
         await screen.findByText(
@@ -75,7 +75,7 @@ describe("Orders Component", () => {
     });
 
     it("should display error message on failure", async () => {
-      const consoleSpy = jest.spyOn(console, "log");
+      console.log = jest.fn();
       axios.get.mockRejectedValue(new Error("Error fetching orders"));
 
       render(
@@ -85,9 +85,8 @@ describe("Orders Component", () => {
       );
 
       await waitFor(() => {
-        expect(consoleSpy).toHaveBeenCalledWith(expect.any(Error)); 
+        expect(console.log).toHaveBeenCalledWith(expect.any(Error)); 
       });
-      consoleSpy.mockRestore(); 
     });
 
     it("should be able to process orders with payment failure", async () => {
