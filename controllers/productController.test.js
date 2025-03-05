@@ -1,9 +1,12 @@
-import { createProductController, deleteProductController, getProductController, getSingleProductController, productFiltersController, productPhotoController, updateProductController } from "./productController";
+import { createProductController, deleteProductController, getProductController, getSingleProductController, productCategoryController, productCountController, productFiltersController, productListController, productPhotoController, realtedProductController, searchProductController, updateProductController } from "./productController";
 import productModel from "../models/productModel";
 import slugify from "slugify";
 import fs from "fs";
+import { populate } from "dotenv";
+import categoryModel from "../models/categoryModel";
 
 jest.mock("../models/productModel");
+jest.mock("../models/categoryModel");
 jest.mock("slugify");
 jest.mock("fs", () => ({ readFileSync: jest.fn() }));
 
@@ -233,6 +236,28 @@ describe("Create Product Controller Test", () => {
       })
     );
   });
+
+  test("should return error when photo size exceeds 1MB", async () => {
+
+    productModel.mockImplementation(() => ({
+      ...validProduct,
+      save: jest.fn().mockResolvedValue(validProduct),
+    }));
+
+    req.files.photo = {
+      path: "/test/path/photo.jpeg",
+      type: "image/jpeg",
+      size: 1000001,
+    };
+
+    await createProductController(req, res);
+    
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.send).toHaveBeenCalledWith({
+        error: "photo is Required and should be less then 1mb",
+      });
+  });
+
 
   
   test("should return 500 when an error occurs", async () => {
@@ -494,7 +519,7 @@ describe("Delete Product Controller", () => {
 
 
 
-describe("Create Product Controller Test", () => {
+describe("Update Product Controller Test", () => {
   let req, res;
 
   beforeEach(() => {
@@ -662,6 +687,27 @@ describe("Create Product Controller Test", () => {
     );
   });
 
+  test("should return error when photo size exceeds 1MB", async () => {
+
+    productModel.mockImplementation(() => ({
+      ...validProduct,
+      findByIdAndUpdate: jest.fn().mockResolvedValue(validProduct),
+    }));
+
+    req.files.photo = {
+      path: "/test/path/photo.jpeg",
+      type: "image/jpeg",
+      size: 1000001,
+    };
+
+    await updateProductController(req, res);
+    
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.send).toHaveBeenCalledWith({
+        error: "photo is Required and should be less then 1mb",
+      });
+  });
+
   
   test("should return 500 when an error occurs", async () => {
 
@@ -757,6 +803,19 @@ describe(" Product Filters Controller Test", () => {
       })
     );
   });
+
+  test("should return all products when no filters are applied", async () => {
+    req.body = {checked: [], radio: []}; 
+
+    productModel.find.mockResolvedValue(mockProducts);
+    await productFiltersController(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.send).toHaveBeenCalledWith({
+        success: true,
+        products: mockProducts,
+    });
+  });
   
 
   test("should return 400 when an error occurs", async () => {
@@ -776,5 +835,363 @@ describe(" Product Filters Controller Test", () => {
 
 
 describe("Product Count Controller Test", () => {
+  let req, res;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+
+    req = {};
+
+    res = {
+      status: jest.fn().mockReturnThis(),
+      send: jest.fn(),
+    };
+  });
+
+  test("should return product count successfully", async () => {
+    const mockCount = 10;
+
+    productModel.find.mockReturnValue({
+      estimatedDocumentCount: jest.fn().mockResolvedValue(mockCount),
+    });
+
+    await productCountController(req, res);
+
+    expect(productModel.find).toHaveBeenCalledWith({});
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.send).toHaveBeenCalledWith({
+      success: true,
+      total: mockCount,
+    });
+  });
+
+
+  test("should return 400 when an error occurs", async () => {
   
-})
+    productModel.find.mockReturnValue({
+      estimatedDocumentCount: jest.fn().mockRejectedValue(mockError),
+    });
+
+    await productCountController(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.send).toHaveBeenCalledWith({
+      message: "Error in product count",
+      error: mockError,
+      success: false,
+    });
+  });
+
+});
+
+
+
+describe("Product List Controller Test", () => {
+  let req, res;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+
+    req = {
+      params: { page: "3"}
+    };
+
+    res = {
+      status: jest.fn().mockReturnThis(),
+      send: jest.fn(),
+    };
+
+  });
+
+
+  test("should return product list successfully", async () => {
+    productModel.find.mockImplementation(() => ({
+      select: jest.fn().mockReturnThis(),
+      skip: jest.fn().mockReturnThis(),
+      limit: jest.fn().mockReturnThis(),
+      sort: jest.fn().mockResolvedValue(mockProducts),
+    }));
+
+    await productListController(req, res);
+
+    expect(productModel.find).toHaveBeenCalledWith({});
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.send).toHaveBeenCalledWith({
+      success: true,
+      products: mockProducts,
+    });
+
+  });
+
+  test("should return page 1 when no page param", async () => {
+    req.params = {};
+
+    const mockSingleProduct = [{
+      _id: "1", 
+      name: "Product1", 
+      slug: "product1", 
+      description: "Product1's description", 
+      price: 20, 
+      category: "Books", 
+      quantity: 200, 
+      shipping: true, 
+      photo: { ...photoTemplate }
+    },];
+
+    productModel.find.mockImplementation(() => ({
+      select: jest.fn().mockReturnThis(),
+      skip: jest.fn().mockReturnThis(),
+      limit: jest.fn().mockReturnThis(),
+      sort: jest.fn().mockResolvedValue(mockSingleProduct),
+    }));
+
+    await productListController(req, res);
+
+    expect(productModel.find).toHaveBeenCalledWith({});
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.send).toHaveBeenCalledWith({
+      success: true,
+      products: mockSingleProduct,
+    });
+
+  });
+
+
+  test("should return 400 when an error occurs", async () => {
+
+    productModel.find.mockImplementation(() => {
+      throw mockError;
+    });
+
+    await productListController(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.send).toHaveBeenCalledWith({
+      success: false,
+      message: "error in per page ctrl",
+      error: mockError,
+    });
+  });
+
+});
+
+describe("Search Product Controller Test", () => {
+  let req, res;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+
+    req = { 
+      params: { keyword: "calculator"},
+    };
+
+    res = {
+      json: jest.fn(),
+      status: jest.fn().mockReturnThis(),
+      send: jest.fn(),
+    };
+  });
+
+  test("should return searched products successfully", async () => {
+    productModel.find.mockImplementation(() => ({
+      select: jest.fn().mockResolvedValue([mockProducts[0]]),
+    }));
+
+    await searchProductController(req, res);
+
+    expect(productModel.find).toHaveBeenCalledWith({
+      $or: [
+        { name: { $regex: req.params.keyword, $options: "i"}},
+        { description: {$regex: req.params.keyword, $options: "i"}},
+      ],
+    });
+
+    expect(res.json).toHaveBeenCalledWith([mockProducts[0]]);
+
+  });
+
+  test("should return 400 when an error occurs", async () => {
+    productModel.find.mockImplementation(() => {
+      throw mockError;
+    });
+
+    await searchProductController(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.send).toHaveBeenCalledWith({
+      success: false, 
+      message: "Error In Search Product API",
+      error: mockError,
+    });
+  });
+
+});
+
+
+describe("Related Product Controller Test", () => {
+  let req, res;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+
+    req = {
+      params: {pid: "1", cid: "Electronics"}
+    };
+
+    res = {
+      status: jest.fn().mockReturnThis(),
+      send: jest.fn(),
+    };
+  });
+
+  test("should return related products successfully", async () => {
+    productModel.find.mockImplementation(() => ({
+      select: jest.fn().mockReturnThis(),
+      limit: jest.fn().mockReturnThis(),
+      populate: jest.fn().mockResolvedValue(mockProducts),
+    }));
+
+    await realtedProductController(req, res);
+
+    expect(productModel.find).toHaveBeenCalledWith({
+      _id: { $ne: req.params.pid},
+      category: req.params.cid,
+    });
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.send).toHaveBeenCalledWith({
+      success: true,
+      products: mockProducts,
+    });
+
+  });
+
+  test("should return an empty array if no related products available", async () => {
+    productModel.find.mockImplementation(() => ({
+      select: jest.fn().mockReturnThis(),
+      limit: jest.fn().mockReturnThis(),
+      populate: jest.fn().mockResolvedValue([]),
+    }));
+
+    await realtedProductController(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.send).toHaveBeenCalledWith({
+      success: true, 
+      products: [],
+    });
+
+  });
+
+  test("should return error when an error occurs", async () => {
+    productModel.find.mockImplementation(() => {
+      throw mockError
+    });
+
+    await realtedProductController(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.send).toHaveBeenCalledWith({
+      success: false, 
+      message: "error while geting related product",
+      error: mockError,
+    });
+
+  });
+
+});
+
+describe("Product Category Controller Test", () => {
+  let req, res, mockCategoryPC, mockProductPC;
+
+  mockCategoryPC = {
+    _id: "c1", name: "Electronics", slug: "electronics"
+  };
+
+  mockProductPC = [{
+    id: "1", 
+    name: "Calculator", 
+    slug: "calculator", 
+    description: "Calculator's description", 
+    price: 20, 
+    category: "Electronics", 
+    quantity: 200, 
+    shipping: true, 
+    photo: { ...photoTemplate }
+   }, {
+    id: "2", 
+    name: "Laptop", 
+    slug: "laptop", 
+    description: "Laptop's description", 
+    price: 2000, 
+    category: "Electronics", 
+    quantity: 100, 
+    shipping: true, 
+    photo: { ...photoTemplate }
+  }]
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+
+    req = {
+      params: { slug: "electronics"}
+    };
+
+    res = {
+      status: jest.fn().mockReturnThis(),
+      send: jest.fn(),
+    };
+
+  });
+
+  test("should return products based on the category successfully", async () => {
+    categoryModel.findOne.mockResolvedValue(mockCategoryPC);
+    productModel.find.mockImplementation(() => ({
+      populate: jest.fn().mockResolvedValue(mockProductPC),
+    }));
+
+    await productCategoryController(req, res);
+
+    expect(categoryModel.findOne).toHaveBeenCalledWith({ slug: req.params.slug});
+    expect(productModel.find).toHaveBeenCalledWith({ category: mockCategoryPC});
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.send).toHaveBeenCalledWith({
+      success: true,
+      category: mockCategoryPC,
+      products: mockProductPC,
+    });
+  });
+
+
+  test("should return 400 when categoryModel throws error", async () => {
+    categoryModel.findOne.mockImplementation(() => {
+      throw mockError
+    });
+
+    await productCategoryController(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.send).toHaveBeenCalledWith({
+      success: false,
+      error: mockError,
+      message: "Error While Getting products",
+    });
+  });
+
+  test("should return 400 when productModel throws error", async () => {
+    categoryModel.findOne.mockResolvedValue(mockCategoryPC);
+    productModel.find.mockImplementation(() => {
+      throw mockError
+    });
+
+    await productCategoryController(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.send).toHaveBeenCalledWith({
+      success: false,
+      error: mockError,
+      message: "Error While Getting products",
+    });
+  });
+
+});
+
