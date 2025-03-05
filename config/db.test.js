@@ -1,12 +1,12 @@
-import { afterEach, beforeAll, expect, jest, test } from "@jest/globals";
 import mongoose from "mongoose";
 import connectDB from "./db";
 
+jest.mock("mongoose");
+
 describe("Mongoose Database", () => {
-    let mongooseConnectSpy, consoleLogSpy;
+    const mockMongoDbUrl = "mongodb://localhost:27017/test";
 
     beforeAll(() => {
-        mongooseConnectSpy = jest.spyOn(mongoose, "connect");
         console.log = jest.fn();
     })
 
@@ -15,34 +15,33 @@ describe("Mongoose Database", () => {
     });
 
     test("if it connects to the database", async () => {
-        // Arrange 
+        // Arrange
         const mockConn = {
             connection: {
-                host: process.env.MONGO_URL
+                host: "localhost"
             }
         };
-        mongooseConnectSpy.mockResolvedValue(mockConn);
+        process.env.MONGO_URL = mockMongoDbUrl;
+        mongoose.connect = jest.fn().mockResolvedValue(mockConn);
 
         // Act
         await connectDB();
 
         // Assert
-        const dbURL = mongooseConnectSpy.mock.calls[0][0];
-        expect(dbURL).toMatch(process.env.MONGO_URL);
-        expect(mongooseConnectSpy).toHaveBeenCalledWith(dbURL);
-        expect(console.log).toHaveBeenCalledWith(`Connected To Mongodb Database ${process.env.MONGO_URL}`.bgMagenta.white);
+        expect(mongoose.connect).toHaveBeenCalledWith(mockMongoDbUrl);
+        expect(console.log).toHaveBeenCalledWith(`Connected To Mongodb Database ${mockConn.connection.host}`.bgMagenta.white);
     });
 
     test("should return an error if db url is missing", async () => {
         // Arrange 
         const mockError = new Error("Connection failed");
-        mongooseConnectSpy.mockRejectedValue(mockError);
+        mongoose.connect = jest.fn().mockRejectedValue(mockError);
 
         // Act
         await connectDB();
 
         // Assert
-        expect(mongooseConnectSpy).toHaveBeenCalled();
+        expect(mongoose.connect).toHaveBeenCalledWith(mockMongoDbUrl);
         expect(console.log).toHaveBeenCalledWith(`Error in Mongodb ${mockError}`.bgRed.white);
     });
 
