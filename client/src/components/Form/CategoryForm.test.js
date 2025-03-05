@@ -4,6 +4,20 @@ import '@testing-library/jest-dom/extend-expect';
 import CategoryForm from './CategoryForm';
 
 describe("form renders properly", () => {
+    let consoleLogSpy;
+    let consoleErrorSpy;
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+        consoleLogSpy = jest.spyOn(console, "log").mockImplementation(() => {});
+        consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+        consoleLogSpy.mockRestore();
+        consoleErrorSpy.mockRestore();
+    });
+
     test("form renders with input field & submit button", async () => {
         render(<CategoryForm />);
         
@@ -19,6 +33,20 @@ describe("form renders properly", () => {
 });
 
 describe("form functionality", () => {
+    let consoleLogSpy;
+    let consoleErrorSpy;
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+        consoleLogSpy = jest.spyOn(console, "log").mockImplementation(() => {});
+        consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+        consoleLogSpy.mockRestore();
+        consoleErrorSpy.mockRestore();
+    });
+
     test("should allow typing in input field", async () => {
         render(<CategoryForm setValue={jest.fn()} />);
 

@@ -23,8 +23,18 @@ jest.mock("../../context/search", () => ({
 }));
 
 describe("update product page renders properly", () => {
+    let consoleLogSpy;
+    let consoleErrorSpy;
+
     beforeEach(() => {
         jest.clearAllMocks();
+        consoleLogSpy = jest.spyOn(console, "log").mockImplementation(() => {});
+        consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+        consoleLogSpy.mockRestore();
+        consoleErrorSpy.mockRestore();
     });
 
     test("renders correctly with fetched product data", async () => {
@@ -80,7 +90,15 @@ describe("update product page renders properly", () => {
 });
 
 describe("update product form functionality", () => {
+    let consoleLogSpy;
+    let consoleErrorSpy;
+    let consoleWarnSpy;
+
     beforeEach(async () => {
+        consoleLogSpy = jest.spyOn(console, "log").mockImplementation(() => {});
+        consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+        consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
+
         // fake product response
         const mockProduct = {
             data: {
@@ -127,6 +145,9 @@ describe("update product form functionality", () => {
 
     afterEach(() => {
         jest.clearAllMocks();
+        consoleLogSpy.mockRestore();
+        consoleErrorSpy.mockRestore();
+        consoleWarnSpy.mockRestore();
     });
 
     test("should allow typing in name field", async () => {
