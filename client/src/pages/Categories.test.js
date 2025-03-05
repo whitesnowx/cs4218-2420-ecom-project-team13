@@ -22,7 +22,7 @@ const renderComponent = () => {
     )
 };
 
-describe('Categories component', () => {
+describe('Categories page', () => {
     beforeEach(() => {
         useCategory.mockReturnValue([
             { _id: 1, name: 'Electronics', slug: 'electronics' },
