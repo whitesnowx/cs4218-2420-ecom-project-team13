@@ -29,7 +29,7 @@ describe("Mongoose Database", () => {
 
         // Assert
         expect(mongoose.connect).toHaveBeenCalledWith(mockMongoDbUrl);
-        expect(console.log).toHaveBeenCalledWith(`Connected To Mongodb Database ${process.env.MONGO_URL}`.bgMagenta.white);
+        expect(console.log).toHaveBeenCalledWith(`Connected To Mongodb Database ${mockConn.connection.host}`.bgMagenta.white);
     });
 
     test("should return an error if db url is missing", async () => {
