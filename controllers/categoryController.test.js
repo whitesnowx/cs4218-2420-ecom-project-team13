@@ -9,6 +9,9 @@ import slugify from "slugify";
 
 jest.mock("../models/categoryModel.js");
 
+jest.spyOn(console, "error").mockImplementation(() => {});
+jest.spyOn(console, "log").mockImplementation(() => {});
+
 describe("Create Category Controller Test", () => {
     let req, res;
 

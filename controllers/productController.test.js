@@ -66,14 +66,16 @@ const mockProducts = [{
 
 const mockError = new Error("Database Error");
 
+
+jest.spyOn(console, "error").mockImplementation(() => {});
+jest.spyOn(console, "log").mockImplementation(() => {});
+
 describe("Create Product Controller Test", () => {
   let req, res;
 
   beforeEach(() => {
     jest.clearAllMocks();
 
-    // jest.spyOn(console, "error").mockImplementation(() => {});
-    // jest.spyOn(console, "log").mockImplementation(() => {});
 
     req = {
       fields: {
@@ -111,9 +113,7 @@ describe("Create Product Controller Test", () => {
     }));
 
     await createProductController(req, res);
-    // console.log("📌 Response Status:", res.status.mock.calls);
-    // console.log("📌 Response Body:", JSON.stringify(res.send.mock.calls, null, 2));
-
+  
     // Verify fs.readFileSync is called for reading the image
     expect(fs.readFileSync).toHaveBeenCalledWith(req.files.photo.path);
 
