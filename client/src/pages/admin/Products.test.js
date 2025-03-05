@@ -24,8 +24,18 @@ jest.mock("../../context/search", () => ({
 }));
 
 describe("products page renders properly", () => {
+    let consoleLogSpy;
+    let consoleErrorSpy;
+
     beforeEach(() => {
         jest.clearAllMocks();
+        consoleLogSpy = jest.spyOn(console, "log").mockImplementation(() => {});
+        consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+        consoleLogSpy.mockRestore();
+        consoleErrorSpy.mockRestore();
     });
 
     test("page renders with available products", async () => {

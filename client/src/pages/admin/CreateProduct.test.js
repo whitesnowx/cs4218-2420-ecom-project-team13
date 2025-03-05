@@ -24,8 +24,18 @@ jest.mock("../../context/search", () => ({
 }));
 
 describe("getAllCategory() functionality", () => {
+    let consoleLogSpy;
+    let consoleErrorSpy;
+
     beforeEach(() => {
         jest.clearAllMocks();
+        consoleLogSpy = jest.spyOn(console, "log").mockImplementation(() => {});
+        consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+        consoleLogSpy.mockRestore();
+        consoleErrorSpy.mockRestore();
     });
 
     test("getAllCategory() successfully retrieves categories", async () => {
@@ -82,8 +92,18 @@ describe("getAllCategory() functionality", () => {
 });
 
 describe("form input functionality", () => {
+    let consoleLogSpy;
+    let consoleErrorSpy;
+
     beforeEach(() => {
         jest.clearAllMocks();
+        consoleLogSpy = jest.spyOn(console, "log").mockImplementation(() => {});
+        consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+        consoleLogSpy.mockRestore();
+        consoleErrorSpy.mockRestore();
     });
 
     test("should allow typing in name field", async () => {
@@ -137,8 +157,18 @@ describe("form input functionality", () => {
 });
 
 describe("create product form functionality", () => {
+    let consoleLogSpy;
+    let consoleErrorSpy;
+
     beforeEach(() => {
         jest.clearAllMocks();
+        consoleLogSpy = jest.spyOn(console, "log").mockImplementation(() => {});
+        consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+        consoleLogSpy.mockRestore();
+        consoleErrorSpy.mockRestore();
     });
 
     test("should call handleCreate() when create button is clicked", async () => {

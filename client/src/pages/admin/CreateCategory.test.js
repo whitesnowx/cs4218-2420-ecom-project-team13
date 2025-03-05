@@ -51,47 +51,22 @@ const getSingleCategoryRender = () => {
     );
 };
 
-// multiple existing categories
-const getMultipleCategoriesRender = () => {
-    const mockResponse = {
-        data: {
-            success: true,
-            message: "All Categories List",
-            category: [
-                {
-                    _id: 1,
-                    name: "Electronics",
-                    slug: slugify("Electronics")
-                },
-                {
-                    _id: 2,
-                    name: "Book",
-                    slug: slugify("Book")
-                },
-                {
-                    _id: 3,
-                    name: "Clothing",
-                    slug: slugify("Clothing")
-                }
-            ]
-        }
-    };
-    axios.get.mockResolvedValueOnce(mockResponse);
-    render(
-        <MemoryRouter initialEntries={["/dashboard/admin/create-category"]}>
-            <Routes>
-                <Route path="/dashboard/admin/create-category" element={<CreateCategory />} />
-            </Routes>
-        </MemoryRouter>
-    );
-};
-
 // block for testing creation of new category
 describe("handleSubmit() functionality", () => {
+    let consoleLogSpy;
+    let consoleErrorSpy;
+
     beforeEach(() => {
         jest.clearAllMocks();
+        consoleLogSpy = jest.spyOn(console, "log").mockImplementation(() => {});
+        consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
     });
-    
+
+    afterEach(() => {
+        consoleLogSpy.mockRestore();
+        consoleErrorSpy.mockRestore();
+    });
+
     test("handleSubmit() creates new category with any input value", async () => {
         // mock successful POST response for new category created
         axios.post.mockResolvedValueOnce({
@@ -254,9 +229,19 @@ describe("handleSubmit() functionality", () => {
 
 // block for testing display of categories when component is being rendered
 describe("getAllCategory() functionality", () => {
+    let consoleLogSpy;
+    let consoleErrorSpy;
+
     beforeEach(() => {
         jest.clearAllMocks();
-    });    
+        consoleLogSpy = jest.spyOn(console, "log").mockImplementation(() => {});
+        consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+        consoleLogSpy.mockRestore();
+        consoleErrorSpy.mockRestore();
+    });
 
     test("getAllCategory() displays existing category when component is mounted", async () => {
         getSingleCategoryRender();
@@ -294,9 +279,19 @@ describe("getAllCategory() functionality", () => {
 
 // block for testing updating of existing categories
 describe("handleUpdate() functionality", () => {
+    let consoleLogSpy;
+    let consoleErrorSpy;
+
     beforeEach(() => {
         jest.clearAllMocks();
-    });    
+        consoleLogSpy = jest.spyOn(console, "log").mockImplementation(() => {});
+        consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+        consoleLogSpy.mockRestore();
+        consoleErrorSpy.mockRestore();
+    });
 
     test("handleUpdate() successfully updates a category", async () => {
         // mock the successful axios PUT response
@@ -421,10 +416,20 @@ describe("handleUpdate() functionality", () => {
 
 // block for testing deletion of existing categories
 describe("handleDelete() functionality", () => {
+    let consoleLogSpy;
+    let consoleErrorSpy;
+
     beforeEach(() => {
         jest.clearAllMocks();
+        consoleLogSpy = jest.spyOn(console, "log").mockImplementation(() => {});
+        consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
     });
-    
+
+    afterEach(() => {
+        consoleLogSpy.mockRestore();
+        consoleErrorSpy.mockRestore();
+    });
+
     test("handleDelete() successfully deletes a category", async () => {
         getSingleCategoryRender();
 
