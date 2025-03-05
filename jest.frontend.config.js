@@ -24,6 +24,8 @@ export default {
     "<rootDir>/client/src/pages/Auth/*.test.js",
     "<rootDir>/client/src/hooks/*.test.js",
     "<rootDir>/client/src/context/auth.test.js", // Only running auth in context
+    "<rootDir>/client/src/components/Form/*.test.js",
+    "<rootDir>/client/src/pages/admin/*.test.js",
   ],
 
   // jest code coverage
@@ -32,6 +34,8 @@ export default {
     "client/src/pages/Auth/**",
     "client/src/hooks/**",
     "client/src/context/auth.{js,jsx}", // Only running auth in context
+    "client/src/components/Form/**",
+    "client/src/pages/admin/**",
   ],
   coverageThreshold: {
     global: {
