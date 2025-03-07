@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom"; 
 import { CartProvider, useCart } from "./cart";
 
@@ -17,10 +17,11 @@ const TestComponent = () => {
 
 describe("Cart Context", () => {
   beforeEach(() => {
+    jest.spyOn(Storage.prototype, "getItem");
     localStorage.clear(); 
   });
 
-  test("loads cart from localStorage on mount", () => {
+  test("loads cart from localStorage on mount", async () => {
     const mockCart = [{ name: "Test Product 1", price: 1111}];
     localStorage.setItem("cart", JSON.stringify(mockCart));
 
@@ -30,7 +31,11 @@ describe("Cart Context", () => {
       </CartProvider>
     );
 
-    expect(screen.getByTestId("cart-item")).toHaveTextContent("Test Product 1");
+    
+    await waitFor(() => {
+      expect(screen.getByTestId("cart-item")).toHaveTextContent("Test Product 1");
+    });
+
   });
 
   test("provides default empty cart if localStorage is empty", () => {
