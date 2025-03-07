@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1741342277983" clover="3.2.0">
-  <project timestamp="1741342277983" name="All files">
+<coverage generated="1741356870549" clover="3.2.0">
+  <project timestamp="1741356870549" name="All files">
     <metrics statements="24" coveredstatements="8" conditionals="4" coveredconditionals="2" methods="8" coveredmethods="3" elements="36" coveredelements="13" complexity="0" loc="24" ncloc="24" packages="1" files="3" classes="3"/>
     <file name="auth.js" path="C:\Users\White\wxs\ProgramFiles\Github\Cloned Repo\cs4218-2420-ecom-project-team13\client\src\context\auth.js">
       <metrics statements="11" coveredstatements="0" conditionals="2" coveredconditionals="0" methods="3" coveredmethods="0"/>
@@ -20,12 +20,12 @@
       <metrics statements="8" coveredstatements="8" conditionals="2" coveredconditionals="2" methods="3" coveredmethods="3"/>
       <line num="3" count="1" type="stmt"/>
       <line num="4" count="1" type="stmt"/>
-      <line num="5" count="3" type="stmt"/>
-      <line num="7" count="3" type="stmt"/>
-      <line num="8" count="2" type="stmt"/>
-      <line num="9" count="2" type="cond" truecount="2" falsecount="0"/>
-      <line num="12" count="3" type="stmt"/>
-      <line num="20" count="3" type="stmt"/>
+      <line num="5" count="8" type="stmt"/>
+      <line num="7" count="8" type="stmt"/>
+      <line num="8" count="5" type="stmt"/>
+      <line num="9" count="5" type="cond" truecount="2" falsecount="0"/>
+      <line num="12" count="8" type="stmt"/>
+      <line num="20" count="8" type="stmt"/>
     </file>
     <file name="search.js" path="C:\Users\White\wxs\ProgramFiles\Github\Cloned Repo\cs4218-2420-ecom-project-team13\client\src\context\search.js">
       <metrics statements="5" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
