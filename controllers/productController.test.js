@@ -141,11 +141,6 @@ describe("Create Product Controller Test", () => {
 
   test("should return error when field name is missing", async () => {
 
-    productModel.mockImplementation(() => ({
-      ...validProduct,
-      save: jest.fn().mockResolvedValue(validProduct),
-    }));
-
     req.fields.name = "";
 
     await createProductController(req, res);
@@ -161,11 +156,6 @@ describe("Create Product Controller Test", () => {
 
   test("should return error when field description is missing", async () => {
 
-    productModel.mockImplementation(() => ({
-      ...validProduct,
-      save: jest.fn().mockResolvedValue(validProduct),
-    }));
-
     req.fields.description = "";
 
     await createProductController(req, res);
@@ -179,11 +169,6 @@ describe("Create Product Controller Test", () => {
   });
 
   test("should return error when field price is missing", async () => {
-
-    productModel.mockImplementation(() => ({
-      ...validProduct,
-      save: jest.fn().mockResolvedValue(validProduct),
-    }));
 
     req.fields.price = "";
 
@@ -200,11 +185,6 @@ describe("Create Product Controller Test", () => {
 
   test("should return error when field category is missing", async () => {
 
-    productModel.mockImplementation(() => ({
-      ...validProduct,
-      save: jest.fn().mockResolvedValue(validProduct),
-    }));
-
     req.fields.category = "";
 
     await createProductController(req, res);
@@ -220,11 +200,6 @@ describe("Create Product Controller Test", () => {
 
   test("should return error when field quantity is missing", async () => {
 
-    productModel.mockImplementation(() => ({
-      ...validProduct,
-      save: jest.fn().mockResolvedValue(validProduct),
-    }));
-
     req.fields.quantity = "";
 
     await createProductController(req, res);
@@ -237,12 +212,21 @@ describe("Create Product Controller Test", () => {
     );
   });
 
-  test("should return error when photo size exceeds 1MB", async () => {
+  test("should return error when field photo is missing", async () => {
 
-    productModel.mockImplementation(() => ({
-      ...validProduct,
-      save: jest.fn().mockResolvedValue(validProduct),
-    }));
+    req.files = {};
+
+    await createProductController(req, res);
+    
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.send).toHaveBeenCalledWith(
+      expect.objectContaining({
+        error: "Photo is Required",
+      })
+    );
+  });
+
+  test("should return error when photo size exceeds 1MB", async () => {
 
     req.files.photo = {
       path: "/test/path/photo.jpeg",
@@ -254,7 +238,7 @@ describe("Create Product Controller Test", () => {
     
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.send).toHaveBeenCalledWith({
-        error: "photo is Required and should be less then 1mb",
+        error: "Photo should be less then 1mb",
       });
   });
 
@@ -274,7 +258,7 @@ describe("Create Product Controller Test", () => {
     expect(res.send).toHaveBeenCalledWith({
       success: false,
       error: mockError,
-      message: "Error in crearing product",
+      message: "Error in creating product",
     });
   });
 
@@ -315,7 +299,7 @@ describe("Get Product Controller Test", () => {
     expect(res.send).toHaveBeenCalledWith({
       success: true,
       counTotal: mockProducts.length,
-      message: "ALlProducts ",
+      message: "AllProducts ",
       products: mockProducts,
     });
 
@@ -334,7 +318,7 @@ describe("Get Product Controller Test", () => {
 
     expect(res.send).toHaveBeenCalledWith({
       success: false,
-      message: "Erorr in getting products",
+      message: "Error in getting products",
       error: mockError.message,
     });
 
@@ -391,7 +375,7 @@ describe("Get Single Product Controller Test", () => {
 
     expect(res.send).toHaveBeenCalledWith({
       success: false,
-      message: "Eror while getitng single product",
+      message: "Error while getitng single product",
       error: mockError,
     });
 
@@ -452,7 +436,7 @@ describe("Product Photo Controller Test", () => {
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.send).toHaveBeenCalledWith({
       success: false,
-      message: "Erorr while getting photo",
+      message: "Error while getting photo",
       error: mockError,
     });
   });
@@ -591,11 +575,6 @@ describe("Update Product Controller Test", () => {
 
   test("should return error when field name is missing", async () => {
 
-    productModel.mockImplementation(() => ({
-      ...validProduct,
-      findByIdAndUpdate: jest.fn().mockResolvedValue(validProduct),
-    }));
-
     req.fields.name = "";
 
     await updateProductController(req, res);
@@ -611,11 +590,6 @@ describe("Update Product Controller Test", () => {
 
   test("should return error when field description is missing", async () => {
 
-    productModel.mockImplementation(() => ({
-      ...validProduct,
-      findByIdAndUpdate: jest.fn().mockResolvedValue(validProduct),
-    }));
-
     req.fields.description = "";
 
     await updateProductController(req, res);
@@ -629,11 +603,6 @@ describe("Update Product Controller Test", () => {
   });
 
   test("should return error when field price is missing", async () => {
-
-    productModel.mockImplementation(() => ({
-      ...validProduct,
-      findByIdAndUpdate: jest.fn().mockResolvedValue(validProduct),
-    }));
 
     req.fields.price = "";
 
@@ -650,11 +619,6 @@ describe("Update Product Controller Test", () => {
 
   test("should return error when field category is missing", async () => {
 
-    productModel.mockImplementation(() => ({
-      ...validProduct,
-      findByIdAndUpdate: jest.fn().mockResolvedValue(validProduct),
-    }));
-
     req.fields.category = "";
 
     await updateProductController(req, res);
@@ -670,11 +634,6 @@ describe("Update Product Controller Test", () => {
 
   test("should return error when field quantity is missing", async () => {
 
-    productModel.mockImplementation(() => ({
-      ...validProduct,
-      findByIdAndUpdate: jest.fn().mockResolvedValue(validProduct),
-    }));
-
     req.fields.quantity = "";
 
     await updateProductController(req, res);
@@ -687,12 +646,21 @@ describe("Update Product Controller Test", () => {
     );
   });
 
-  test("should return error when photo size exceeds 1MB", async () => {
+  test("should return error when field photo is missing", async () => {
 
-    productModel.mockImplementation(() => ({
-      ...validProduct,
-      findByIdAndUpdate: jest.fn().mockResolvedValue(validProduct),
-    }));
+    req.files = {};
+
+    await updateProductController(req, res);
+    
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.send).toHaveBeenCalledWith(
+      expect.objectContaining({
+        error: "Photo is Required",
+      })
+    );
+  });
+
+  test("should return error when photo size exceeds 1MB", async () => {
 
     req.files.photo = {
       path: "/test/path/photo.jpeg",
@@ -704,7 +672,7 @@ describe("Update Product Controller Test", () => {
     
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.send).toHaveBeenCalledWith({
-        error: "photo is Required and should be less then 1mb",
+        error: "Photo should be less then 1mb",
       });
   });
 
@@ -721,7 +689,7 @@ describe("Update Product Controller Test", () => {
     expect(res.send).toHaveBeenCalledWith({
       success: false,
       error: mockError,
-      message: "Error in Updte product",
+      message: "Error in Update Product",
     });
   });
 
@@ -826,7 +794,7 @@ describe(" Product Filters Controller Test", () => {
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.send).toHaveBeenCalledWith({
       success: false,
-      message: "Error WHile Filtering Products",
+      message: "Error While Filtering Products",
       error: mockError,
     });
   });
