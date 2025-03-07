@@ -1,39 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1741356870549" clover="3.2.0">
-  <project timestamp="1741356870549" name="All files">
-    <metrics statements="24" coveredstatements="8" conditionals="4" coveredconditionals="2" methods="8" coveredmethods="3" elements="36" coveredelements="13" complexity="0" loc="24" ncloc="24" packages="1" files="3" classes="3"/>
-    <file name="auth.js" path="C:\Users\White\wxs\ProgramFiles\Github\Cloned Repo\cs4218-2420-ecom-project-team13\client\src\context\auth.js">
-      <metrics statements="11" coveredstatements="0" conditionals="2" coveredconditionals="0" methods="3" coveredmethods="0"/>
-      <line num="4" count="0" type="stmt"/>
-      <line num="6" count="0" type="stmt"/>
-      <line num="7" count="0" type="stmt"/>
-      <line num="13" count="0" type="stmt"/>
-      <line num="15" count="0" type="stmt"/>
-      <line num="16" count="0" type="stmt"/>
-      <line num="17" count="0" type="cond" truecount="0" falsecount="2"/>
-      <line num="18" count="0" type="stmt"/>
-      <line num="19" count="0" type="stmt"/>
-      <line num="27" count="0" type="stmt"/>
-      <line num="35" count="0" type="stmt"/>
-    </file>
-    <file name="cart.js" path="C:\Users\White\wxs\ProgramFiles\Github\Cloned Repo\cs4218-2420-ecom-project-team13\client\src\context\cart.js">
+<coverage generated="1741362368835" clover="3.2.0">
+  <project timestamp="1741362368835" name="All files">
+    <metrics statements="56" coveredstatements="38" conditionals="24" coveredconditionals="10" methods="17" coveredmethods="12" elements="97" coveredelements="60" complexity="0" loc="56" ncloc="56" packages="2" files="2" classes="2"/>
+    <package name="context">
       <metrics statements="8" coveredstatements="8" conditionals="2" coveredconditionals="2" methods="3" coveredmethods="3"/>
-      <line num="3" count="1" type="stmt"/>
-      <line num="4" count="1" type="stmt"/>
-      <line num="5" count="8" type="stmt"/>
-      <line num="7" count="8" type="stmt"/>
-      <line num="8" count="5" type="stmt"/>
-      <line num="9" count="5" type="cond" truecount="2" falsecount="0"/>
-      <line num="12" count="8" type="stmt"/>
-      <line num="20" count="8" type="stmt"/>
-    </file>
-    <file name="search.js" path="C:\Users\White\wxs\ProgramFiles\Github\Cloned Repo\cs4218-2420-ecom-project-team13\client\src\context\search.js">
-      <metrics statements="5" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
-      <line num="3" count="0" type="stmt"/>
-      <line num="4" count="0" type="stmt"/>
-      <line num="5" count="0" type="stmt"/>
-      <line num="10" count="0" type="stmt"/>
-      <line num="18" count="0" type="stmt"/>
-    </file>
+      <file name="cart.js" path="C:\Users\White\wxs\ProgramFiles\Github\Cloned Repo\cs4218-2420-ecom-project-team13\client\src\context\cart.js">
+        <metrics statements="8" coveredstatements="8" conditionals="2" coveredconditionals="2" methods="3" coveredmethods="3"/>
+        <line num="3" count="2" type="stmt"/>
+        <line num="4" count="2" type="stmt"/>
+        <line num="5" count="30" type="stmt"/>
+        <line num="7" count="30" type="stmt"/>
+        <line num="8" count="15" type="stmt"/>
+        <line num="9" count="15" type="cond" truecount="2" falsecount="0"/>
+        <line num="12" count="30" type="stmt"/>
+        <line num="20" count="52" type="stmt"/>
+      </file>
+    </package>
+    <package name="pages">
+      <metrics statements="48" coveredstatements="30" conditionals="22" coveredconditionals="8" methods="14" coveredmethods="9"/>
+      <file name="CartPage.js" path="C:\Users\White\wxs\ProgramFiles\Github\Cloned Repo\cs4218-2420-ecom-project-team13\client\src\pages\CartPage.js">
+        <metrics statements="48" coveredstatements="30" conditionals="22" coveredconditionals="8" methods="14" coveredmethods="9"/>
+        <line num="12" count="1" type="stmt"/>
+        <line num="13" count="22" type="stmt"/>
+        <line num="14" count="22" type="stmt"/>
+        <line num="15" count="22" type="stmt"/>
+        <line num="16" count="22" type="stmt"/>
+        <line num="17" count="22" type="stmt"/>
+        <line num="18" count="22" type="stmt"/>
+        <line num="21" count="22" type="stmt"/>
+        <line num="22" count="22" type="stmt"/>
+        <line num="23" count="22" type="stmt"/>
+        <line num="24" count="22" type="stmt"/>
+        <line num="25" count="30" type="stmt"/>
+        <line num="27" count="22" type="stmt"/>
+        <line num="32" count="0" type="stmt"/>
+        <line num="36" count="22" type="stmt"/>
+        <line num="37" count="4" type="stmt"/>
+        <line num="38" count="4" type="stmt"/>
+        <line num="39" count="9" type="stmt"/>
+        <line num="40" count="4" type="stmt"/>
+        <line num="41" count="4" type="stmt"/>
+        <line num="42" count="4" type="stmt"/>
+        <line num="44" count="0" type="stmt"/>
+        <line num="49" count="22" type="stmt"/>
+        <line num="50" count="10" type="stmt"/>
+        <line num="51" count="10" type="stmt"/>
+        <line num="52" count="0" type="stmt"/>
+        <line num="54" count="10" type="stmt"/>
+        <line num="57" count="22" type="stmt"/>
+        <line num="58" count="10" type="stmt"/>
+        <line num="62" count="22" type="stmt"/>
+        <line num="63" count="0" type="stmt"/>
+        <line num="64" count="0" type="stmt"/>
+        <line num="65" count="0" type="stmt"/>
+        <line num="66" count="0" type="stmt"/>
+        <line num="70" count="0" type="stmt"/>
+        <line num="71" count="0" type="stmt"/>
+        <line num="72" count="0" type="stmt"/>
+        <line num="73" count="0" type="stmt"/>
+        <line num="74" count="0" type="stmt"/>
+        <line num="76" count="0" type="stmt"/>
+        <line num="77" count="0" type="stmt"/>
+        <line num="80" count="22" type="stmt"/>
+        <line num="103" count="30" type="stmt"/>
+        <line num="121" count="4" type="stmt"/>
+        <line num="141" count="0" type="stmt"/>
+        <line num="152" count="0" type="stmt"/>
+        <line num="160" count="0" type="stmt"/>
+        <line num="183" count="0" type="stmt"/>
+      </file>
+    </package>
   </project>
 </coverage>
