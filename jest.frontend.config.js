@@ -20,18 +20,34 @@ export default {
   transformIgnorePatterns: ["/node_modules/(?!(styleMock\\.js)$)"],
 
   // only run these tests
-  // testMatch: ["<rootDir>/client/src/pages/Auth/*.test.js"],
+
   testMatch: [
-    "<rootDir>/client/src/context/cart.test.js",
-    "<rootDir>/client/src/pages/CartPage.test.js"
+    "<rootDir>/client/src/components/Form/*.test.js",
+    "<rootDir>/client/src/components/UserMenu.test.js",
+    "<rootDir>/client/src/context/*.test.js", // Only runs auth in context
+    "<rootDir>/client/src/hooks/*.test.js",
+    "<rootDir>/client/src/pages/admin/*.test.js",
+    "<rootDir>/client/src/pages/Auth/*.test.js",
+    "<rootDir>/client/src/pages/user/*.test.js",
+    "<rootDir>/client/src/pages/*.test.js",
   ],
 
   // jest code coverage
   collectCoverage: true,
-  // collectCoverageFrom: ["client/src/pages/Auth/**"],
   collectCoverageFrom: [
-    "client/src/context/cart.js",
-    "client/src/pages/CartPage.js"],
+    "client/src/components/Form/**",
+    "client/src/components/UserMenu.{js,jsx}",
+    "client/src/context/auth.{js,jsx}", // Only covers auth in context
+    "client/src/context/cart.{js,jsx}",
+    "client/src/hooks/**",
+    "client/src/pages/admin/**",
+    "client/src/pages/Auth/**",
+    "client/src/pages/user/**",
+    "client/src/pages/Contact.{js,jsx}",
+    "client/src/pages/Policy.{js,jsx}",
+    "client/src/pages/CartPage.{js,jsx}"
+  ],
+
   coverageThreshold: {
     global: {
       lines: 100,
