@@ -6,6 +6,7 @@ import { AuthProvider, useAuth } from "../context/auth";
 import CartPage from "../pages/CartPage";
 import axios from "axios";
 import { useEffect } from "react"; 
+import { afterEach } from "node:test";
 
 jest.mock("axios");
 
@@ -34,9 +35,21 @@ describe("CartPage", () => {
       </AuthProvider>
     );
 
+    let consoleLogSpy;
+    let consoleErrorSpy;
+
   beforeEach(() => {
     localStorage.clear();
     jest.clearAllMocks();
+    consoleLogSpy = jest.spyOn(console, "log").mockImplementation(() => {});
+    consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+    });
+
+  afterEach(() => {
+
+    consoleLogSpy.mockRestore();
+    consoleErrorSpy.mockRestore();
+    
   });
 
   test("message for empty cart", () => {
@@ -56,6 +69,7 @@ describe("CartPage", () => {
     expect(screen.getByText("Test Product 1")).toBeInTheDocument();
     expect(screen.getByText(/price : 1111/i)).toBeInTheDocument();
   });
+  
   test("displaying multiple items in cart", () => {
     localStorage.setItem(
       "cart",

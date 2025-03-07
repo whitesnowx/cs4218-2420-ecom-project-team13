@@ -24,7 +24,7 @@ export default {
   testMatch: [
     "<rootDir>/client/src/components/Form/*.test.js",
     "<rootDir>/client/src/components/UserMenu.test.js",
-    "<rootDir>/client/src/context/*.test.js", // Only runs auth in context
+    "<rootDir>/client/src/context/*.test.js",
     "<rootDir>/client/src/hooks/*.test.js",
     "<rootDir>/client/src/pages/admin/*.test.js",
     "<rootDir>/client/src/pages/Auth/*.test.js",
