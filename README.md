@@ -39,3 +39,31 @@ URL of GitHub workflow for CI: <insert latest url here>
     ```ml
     REACT_APP_API = http://localhost:6060
     ```
+
+### Usage
+
+> Make sure that you are in the root directory when you run these commands.
+
+`npm run dev`
+
+- Runs the app in the development mode.
+- Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+
+`npm run test` - Runs frontend and backend tests, one after the other, and the output goes to the terminal.\
+
+`npm run test:backend` - Runs backend tests only and the output goes to the terminal.\
+`npm run test:frontend` - Runs frontend tests only and the output goes to the terminal.\
+
+`npm run test:backend-no-cc` - Runs backend tests only and the output goes to the terminal without coverage.\
+`npm run test:frontend-no-cc` - Runs frontend tests only and the output goes to the terminal without coverage.\
+
+> [!NOTE]
+> If you encounter the following output result when you run `npm run test`, you can run `npm run test:frontend ; npm run test:backend` or run them individually.
+> ```sh
+> No tests found, exiting with code 0
+> ----------|---------|----------|---------|---------|-------------------
+> File      | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
+> ----------|---------|----------|---------|---------|-------------------
+> All files |       0 |        0 |       0 |       0 |                  
+> ----------|---------|----------|---------|---------|-------------------
+>```
