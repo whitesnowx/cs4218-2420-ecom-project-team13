@@ -87,6 +87,25 @@ describe("update product page renders properly", () => {
         expect(screen.getByDisplayValue("1")).toBeInTheDocument();
         expect(screen.getByText("Electronics")).toBeInTheDocument();
     });
+
+    test("getSingleProduct() fails to retrieve product data due to error in GET request", async () => {
+        axios.get.mockImplementation((url) => {
+            if (url.includes("/api/v1/product/get-product")) {
+                return new Error("Network error");
+            }
+        });
+
+        render(
+            <MemoryRouter>
+                <UpdateProduct />
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(consoleLogSpy).toHaveBeenCalled();
+        });
+
+    });
 });
 
 describe("update product form functionality", () => {
@@ -205,6 +224,13 @@ describe("update product form functionality", () => {
         expect(toast.success).toHaveBeenCalledWith("Product Updated Successfully");
     });
 
+    test("handleUpdate() fails due to error in PUT request", async () => {
+        fireEvent.click(screen.getByText("UPDATE PRODUCT"));
+
+        expect(consoleLogSpy).toHaveBeenCalled();
+        expect(toast.error).toHaveBeenCalledWith("something went wrong");
+    });
+
     test("should call handleDelete() when delete button is clicked", async () => {
         // simulate window prompt to confirm deletion of product
         window.prompt = jest.fn(() => "yes");
@@ -226,4 +252,23 @@ describe("update product form functionality", () => {
 
         expect(toast.success).toHaveBeenCalledWith("Product DEleted Succfully");
     });
+
+    test("handleDelete() fails with console and toast error messages shown", async () => {
+        // simulate window prompt to confirm deletion of product
+        window.prompt = jest.fn(() => "yes");
+
+        axios.delete.mockRejectedValueOnce(new Error("Network error"));
+
+        fireEvent.click(screen.getByText("DELETE PRODUCT"));
+
+        await waitFor(() => {
+            expect(axios.delete).toHaveBeenCalledWith(
+                `/api/v1/product/delete-product/`
+            );
+        });
+
+        expect(consoleLogSpy).toHaveBeenCalled();
+        expect(toast.error).toHaveBeenCalled();
+    });
+
 });

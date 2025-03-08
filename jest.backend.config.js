@@ -12,7 +12,7 @@ export default {
 
   // which test to run
   testMatch: [
-    "<rootDir>/controllers/authController.test.js", // Only running authController in controllers
+    "<rootDir>/controllers/*.test.js",
     "<rootDir>/config/*.test.js",
     "<rootDir>/helpers/*.test.js",
     "<rootDir>/middlewares/*.test.js",
@@ -24,7 +24,7 @@ export default {
   // jest code coverage
   collectCoverage: true,
   collectCoverageFrom: [
-    "controllers/authController.{js,jsx}", // Only covering authController in controllers
+    "controllers/**",
     "config/**",
     "helpers/**",
     "middlewares/**"
@@ -36,3 +36,4 @@ export default {
     },
   },
 };
+
