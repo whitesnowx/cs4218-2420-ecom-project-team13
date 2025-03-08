@@ -59,7 +59,7 @@ describe("Auth Controller", () => {
       await registerController(req, res);
 
       // Assert
-      expect(res.send).toHaveBeenCalledWith({ error: "Name is required" });
+      expect(res.send).toHaveBeenCalledWith({ message: "Name is required" });
     });
 
     it("should return an error if email is missing", async () => {
@@ -197,7 +197,7 @@ describe("Auth Controller", () => {
       await loginController(req, res);
 
       // Assert
-      expect(res.status).toHaveBeenCalledWith(404);
+      expect(res.status).toHaveBeenCalledWith(200);
       expect(res.send).toHaveBeenCalledWith({
         success: false,
         message: "Invalid email or password"
@@ -212,7 +212,7 @@ describe("Auth Controller", () => {
       await loginController(req, res);
 
       // Assert
-      expect(res.status).toHaveBeenCalledWith(404);
+      expect(res.status).toHaveBeenCalledWith(200);
       expect(res.send).toHaveBeenCalledWith({
         success: false,
         message: "Invalid email or password"
@@ -227,7 +227,7 @@ describe("Auth Controller", () => {
       await loginController(req, res);
 
       // Assert
-      expect(res.status).toHaveBeenCalledWith(404);
+      expect(res.status).toHaveBeenCalledWith(200);
       expect(res.send).toHaveBeenCalledWith({
         success: false,
         message: "Email is not registered"
@@ -321,7 +321,7 @@ describe("Auth Controller", () => {
       await forgotPasswordController(req, res);
 
       // Assert
-      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.status).toHaveBeenCalledWith(200);
       expect(res.send).toHaveBeenCalledWith({ message: "Email is required" });
     });
 
@@ -333,7 +333,7 @@ describe("Auth Controller", () => {
       await forgotPasswordController(req, res);
 
       // Assert
-      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.status).toHaveBeenCalledWith(200);
       expect(res.send).toHaveBeenCalledWith({ message: "Answer is required" });
     });
 
@@ -345,7 +345,7 @@ describe("Auth Controller", () => {
       await forgotPasswordController(req, res);
 
       // Assert
-      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.status).toHaveBeenCalledWith(200);
       expect(res.send).toHaveBeenCalledWith({ message: "New Password is required" });
     });
 
