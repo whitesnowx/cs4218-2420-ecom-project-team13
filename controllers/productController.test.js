@@ -363,6 +363,22 @@ describe("Get Single Product Controller Test", () => {
 
   });
 
+  test("should return 404 when product is not found", async() => {
+    productModel.findOne.mockImplementation(() => ({
+      select: jest.fn().mockReturnThis(),
+      populate: jest.fn().mockResolvedValue(null),
+    }));
+
+    await getSingleProductController(req, res);
+
+    expect(productModel.findOne).toHaveBeenCalledWith({ slug: req.params.slug });
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.send).toHaveBeenCalledWith({
+      success: false,
+      message: "Product not found",
+    });
+  });
+
   test("should return 500 when an error occurs", async () => {
     
     productModel.findOne.mockImplementation(() => {
@@ -425,6 +441,23 @@ describe("Product Photo Controller Test", () => {
 
   });
 
+  test("should return 404 when a photo is not found", async () => {
+    productModel.findById.mockImplementation(() => ({
+      select: jest.fn().mockResolvedValue({
+        id: validProduct.pid,
+        photo: {},
+      }),
+    }));
+
+    await productPhotoController(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.send).toHaveBeenCalledWith({
+      success: false,
+      message: "Photo not found",
+    });
+
+  });
 
   test("should return 500 when an error occurs", async () => {
     productModel.findById.mockImplementation(() => {
@@ -1126,6 +1159,18 @@ describe("Product Category Controller Test", () => {
       success: true,
       category: mockCategoryPC,
       products: mockProductPC,
+    });
+  });
+
+  test("should return 404 when the category is not found", async () => {
+    categoryModel.findOne.mockResolvedValue(null);
+
+    await productCategoryController(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.send).toHaveBeenCalledWith({
+      success: false, 
+      message: "Category not found",
     });
   });
 

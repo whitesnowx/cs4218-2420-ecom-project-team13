@@ -97,6 +97,13 @@ export const getSingleProductController = async (req, res) => {
       .findOne({ slug: req.params.slug })
       .select("-photo")
       .populate("category");
+    
+    if (!product) {
+      return res.status(404).send({ 
+        success: false, 
+        message: "Product not found" });
+    }
+
     res.status(200).send({
       success: true,
       message: "Single Product Fetched",
@@ -119,6 +126,11 @@ export const productPhotoController = async (req, res) => {
     if (product.photo.data) {
       res.set("Content-type", product.photo.contentType);
       return res.status(200).send(product.photo.data);
+    } else {
+      res.status(404).send({
+        success: false,
+        message: "Photo not found",
+      });
     }
   } catch (error) {
     console.log(error);
@@ -319,6 +331,14 @@ export const realtedProductController = async (req, res) => {
 export const productCategoryController = async (req, res) => {
   try {
     const category = await categoryModel.findOne({ slug: req.params.slug });
+
+    if (!category) {
+      return res.status(404).send({
+        success: false,
+        message: "Category not found",
+      });
+    }
+
     const products = await productModel.find({ category }).populate("category");
     res.status(200).send({
       success: true,
