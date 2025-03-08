@@ -47,7 +47,7 @@ export default {
     "client/src/pages/Policy.{js,jsx}",
     "client/src/pages/CartPage.{js,jsx}"
   ],
-
+  
   coverageThreshold: {
     global: {
       lines: 100,
