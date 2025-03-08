@@ -6,7 +6,6 @@ import { AuthProvider, useAuth } from "../context/auth";
 import CartPage from "../pages/CartPage";
 import axios from "axios";
 import { useEffect } from "react"; 
-import { afterEach } from "node:test";
 
 jest.mock("axios");
 

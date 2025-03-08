@@ -18,8 +18,8 @@ export default {
     "<rootDir>/middlewares/*.test.js",
   ],
 
-  // configure dotenv file
-  setupFiles: ["dotenv/config"],
+  // configure dotenv file to .env.test
+  setupFiles: ["<rootDir>/jest.backend.setup.js"],
 
   // jest code coverage
   collectCoverage: true,
