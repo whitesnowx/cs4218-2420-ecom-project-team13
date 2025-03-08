@@ -9,7 +9,7 @@ export const registerController = async (req, res) => {
     const { name, email, password, phone, address, answer } = req.body;
     //validations
     if (!name) {
-      return res.send({ error: "Name is required" });
+      return res.send({ message: "Name is required" });
     }
     if (!email) {
       return res.send({ message: "Email is required" });
@@ -27,9 +27,9 @@ export const registerController = async (req, res) => {
       return res.send({ message: "Answer is required" });
     }
     //check user
-    const exisitingUser = await userModel.findOne({ email });
-    //exisiting user
-    if (exisitingUser) {
+    const existingUser = await userModel.findOne({ email });
+    //existing user
+    if (existingUser) {
       return res.status(200).send({
         success: false,
         message: "Already registered. Please login",
@@ -68,7 +68,7 @@ export const loginController = async (req, res) => {
     const { email, password } = req.body;
     //validation
     if (!email || !password) {
-      return res.status(404).send({
+      return res.status(200).send({
         success: false,
         message: "Invalid email or password",
       });
@@ -76,7 +76,7 @@ export const loginController = async (req, res) => {
     //check user
     const user = await userModel.findOne({ email });
     if (!user) {
-      return res.status(404).send({
+      return res.status(200).send({
         success: false,
         message: "Email is not registered",
       });
@@ -123,13 +123,13 @@ export const forgotPasswordController = async (req, res) => {
   try {
     const { email, answer, newPassword } = req.body;
     if (!email) {
-      res.status(400).send({ message: "Email is required" });
+      res.status(200).send({ message: "Email is required" });
     }
     if (!answer) {
-      res.status(400).send({ message: "Answer is required" });
+      res.status(200).send({ message: "Answer is required" });
     }
     if (!newPassword) {
-      res.status(400).send({ message: "New Password is required" });
+      res.status(200).send({ message: "New Password is required" });
     }
     //check
     const user = await userModel.findOne({ email, answer });
