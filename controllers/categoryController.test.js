@@ -281,6 +281,18 @@ describe("Get Single Category Controller Test", () => {
         
     });
 
+    test("should return status 404 when a category is not found", async () => {
+        categoryModel.findOne.mockResolvedValue(null);
+
+        await singleCategoryController(req, res);
+
+        expect(categoryModel.findOne).toHaveBeenCalledWith({ slug: "books"});
+        expect(res.status).toHaveBeenCalledWith(404);
+        expect(res.send).toHaveBeenCalledWith({
+            success: false,
+            message: "Category not found",
+        });
+    });
 
 
     test("should return status 500 when an error occurs while getting a single category", async () => {
@@ -340,7 +352,18 @@ describe("Delete Category Controller Test", () => {
         });
     });
 
+    test("should return status 404 when a category is not found", async () => {
+        categoryModel.findByIdAndDelete.mockResolvedValue(null);
 
+        await deleteCategoryCOntroller(req, res);
+
+        expect(categoryModel.findByIdAndDelete).toHaveBeenCalledWith("1");
+        expect(res.status).toHaveBeenCalledWith(404);
+        expect(res.send).toHaveBeenCalledWith({
+            success: false,
+            message: "Category not found",
+        });
+    });
 
     test("should return status 500 when an error occurs while deleting a single category", async () => {
         categoryModel.findByIdAndDelete = jest.fn().mockRejectedValue(new Error("Testing Error while deleting a single category"));
