@@ -75,7 +75,7 @@ describe("getAllCategory() functionality", () => {
     });
 
     test("getAllCategory() fails to retrieve categories due to error in GET request", async () => {
-        axios.get.mockRejectedValue(new Error("Network error"));
+        axios.get.mockRejectedValueOnce(new Error("Network error"));
 
         // fake component render
         render(<CreateProduct />);
