@@ -13,8 +13,8 @@ const AdminOrders = () => {
     "Not Process",
     "Processing",
     "Shipped",
-    "deliverd",
-    "cancel",
+    "Delivered",
+    "Cancel",
   ]);
   const [changeStatus, setCHangeStatus] = useState("");
   const [orders, setOrders] = useState([]);
@@ -52,7 +52,7 @@ const AdminOrders = () => {
           <h1 className="text-center">All Orders</h1>
           {orders?.map((o, i) => {
             return (
-              <div className="border shadow">
+              <div className="border shadow" key={o._id || i}>
                 <table className="table">
                   <thead>
                     <tr>
@@ -69,12 +69,12 @@ const AdminOrders = () => {
                       <td>{i + 1}</td>
                       <td>
                         <Select
-                          bordered={false}
+                          variant={"borderless"}
                           onChange={(value) => handleChange(o._id, value)}
                           defaultValue={o?.status}
                         >
                           {status.map((s, i) => (
-                            <Option key={i} value={s}>
+                            <Option key={i} value={s} >
                               {s}
                             </Option>
                           ))}
@@ -83,7 +83,7 @@ const AdminOrders = () => {
                       <td>{o?.buyer?.name}</td>
                       <td>{moment(o?.createdAt).fromNow()}</td>
                       <td>{o?.payment.success ? "Success" : "Failed"}</td>
-                      <td>{o?.products?.length}</td>
+                      <td data-testid="product-count">{o?.products?.length}</td>
                     </tr>
                   </tbody>
                 </table>
