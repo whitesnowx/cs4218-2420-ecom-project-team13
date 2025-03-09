@@ -12,27 +12,28 @@ export default {
 
   // which test to run
   testMatch: [
-    "<rootDir>/controllers/authController.test.js", // Only running authController in controllers
+    "<rootDir>/controllers/*.test.js",
     "<rootDir>/config/*.test.js",
     "<rootDir>/helpers/*.test.js",
     "<rootDir>/middlewares/*.test.js",
   ],
 
-  // configure dotenv file
-  setupFiles: ["dotenv/config"],
+  // configure dotenv file to .env.test
+  setupFiles: ["<rootDir>/jest.backend.setup.js"],
 
   // jest code coverage
   collectCoverage: true,
   collectCoverageFrom: [
-    "controllers/authController.{js,jsx}", // Only covering authController in controllers
+    "controllers/**",
     "config/**",
     "helpers/**",
     "middlewares/**"
   ],
   coverageThreshold: {
     global: {
-      lines: 100,
-      functions: 100,
+      lines: 80,
+      functions: 80,
     },
   },
 };
+

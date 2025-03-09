@@ -126,7 +126,7 @@ const CartPage = () => {
                 </div>
               ))}
             </div>
-            <div className="col-md-5 cart-summary ">
+            <div className="col-md-5 cart-summary " data-testid="cart-summary">
               <h2>Cart Summary</h2>
               <p>Total | Checkout | Payment</p>
               <hr />
@@ -173,6 +173,7 @@ const CartPage = () => {
                 ) : (
                   <>
                     <DropIn
+                      data-testid="braintree-drop-in"
                       options={{
                         authorization: clientToken,
                         paypal: {
@@ -184,6 +185,7 @@ const CartPage = () => {
 
                     <button
                       className="btn btn-primary"
+                      data-testid="payment-button"
                       onClick={handlePayment}
                       disabled={loading || !instance || !auth?.user?.address}
                     >
