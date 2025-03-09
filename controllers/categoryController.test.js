@@ -3,14 +3,11 @@ import { categoryControlller, createCategoryController, deleteCategoryCOntroller
 import categoryModel from "../models/categoryModel";
 import slugify from "slugify";
 
-// jest.unstable_mockModule("../models/categoryModel.js", () => ({
-//     default: jest.fn(),
-// }));
 
 jest.mock("../models/categoryModel.js");
 
-// jest.spyOn(console, "error").mockImplementation(() => {});
-// jest.spyOn(console, "log").mockImplementation(() => {});
+jest.spyOn(console, "error").mockImplementation(() => {});
+jest.spyOn(console, "log").mockImplementation(() => {});
 
 describe("Create Category Controller Test", () => {
     let req, res;
