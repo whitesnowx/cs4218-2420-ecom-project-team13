@@ -32,7 +32,7 @@ describe("Create Category Controller Test", () => {
 
         // Mock 'save' method for saving a new category
         categoryModel.prototype.save = jest.fn().mockResolvedValue({
-            name: "Car",
+            name: req.body.name,
             slug: "car"
         });
 
@@ -40,7 +40,7 @@ describe("Create Category Controller Test", () => {
         await createCategoryController(req, res);
 
         // Expect 'findOne' to be called to check if the category exists
-        expect(categoryModel.findOne).toHaveBeenCalledWith({name: "Car"});
+        expect(categoryModel.findOne).toHaveBeenCalledWith({name: req.body.name});
 
         // Expect 'save' to be called to save new category 
         expect(categoryModel.prototype.save).toHaveBeenCalled();
@@ -53,8 +53,8 @@ describe("Create Category Controller Test", () => {
             success: true,
             message: "new category created",
             category: {
-                name: "Car",
-                slug: "car"
+                name: req.body.name,
+                slug: "car",
             }
         });
 
@@ -62,7 +62,7 @@ describe("Create Category Controller Test", () => {
 
 
     test("should not save new category model when it already exist", async() => {
-        categoryModel.findOne = jest.fn().mockResolvedValue({ name: "Car", slug: "car"});
+        categoryModel.findOne = jest.fn().mockResolvedValue({ name: req.body.name, slug: "car"});
         categoryModel.prototype.save = jest.fn();
 
         await createCategoryController(req, res);
@@ -128,8 +128,8 @@ describe("Update Category Controller Test", () => {
     test("should update category if it exists and is not duplciated", async () => {
         categoryModel.findOne.mockResolvedValue(null);
         categoryModel.findByIdAndUpdate = jest.fn().mockResolvedValue({
-            _id: "123",
-            name: "Category Updated",
+            _id: req.params.id,
+            name: req.body.name,
             slug: slugify("Category Updated"),
         });
 
@@ -147,7 +147,7 @@ describe("Update Category Controller Test", () => {
             success: true,
             message: "Category Updated Successfully",
             category: {
-                _id: "123",
+                _id: req.params.id,
                 name: req.body.name,
                 slug: slugify(req.body.name),
             },
@@ -172,8 +172,8 @@ describe("Update Category Controller Test", () => {
         await updateCategoryController(req, res);;
 
         expect(categoryModel.findByIdAndUpdate).toHaveBeenCalledWith(
-            "123",
-            {name: "Category Updated", slug: slugify("Category Updated")},
+            req.params.id,
+            {name: req.body.name, slug: slugify("Category Updated")},
             {new: true}
         );
 
@@ -222,7 +222,7 @@ describe("Update Category Controller Test", () => {
 
         expect(categoryModel.findOne).toHaveBeenCalledWith({ name: req.body.name });
         expect(categoryModel.findByIdAndUpdate).toHaveBeenCalledWith(
-            "123",
+            req.params.id,
             { name: req.body.name, slug: slugify(req.body.name) },
             { new: true }
         );
@@ -393,14 +393,14 @@ describe("Delete Category Controller Test", () => {
 
     test("should delete a category when found", async () => {
         categoryModel.findByIdAndDelete = jest.fn().mockResolvedValue({
-            _id: "1",
+            _id: req.params.id,
             name: "Books",
             slug: "books",
         });
 
         await deleteCategoryCOntroller(req, res);
 
-        expect(categoryModel.findByIdAndDelete).toHaveBeenLastCalledWith("1");
+        expect(categoryModel.findByIdAndDelete).toHaveBeenLastCalledWith(req.params.id);
 
         expect(res.status).toHaveBeenCalledWith(200);
 
@@ -415,7 +415,7 @@ describe("Delete Category Controller Test", () => {
 
         await deleteCategoryCOntroller(req, res);
 
-        expect(categoryModel.findByIdAndDelete).toHaveBeenCalledWith("1");
+        expect(categoryModel.findByIdAndDelete).toHaveBeenCalledWith(req.params.id);
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.send).toHaveBeenCalledWith({
             success: false,
@@ -428,7 +428,7 @@ describe("Delete Category Controller Test", () => {
 
         await deleteCategoryCOntroller(req, res);
 
-        expect(categoryModel.findByIdAndDelete).toHaveBeenLastCalledWith("1");
+        expect(categoryModel.findByIdAndDelete).toHaveBeenLastCalledWith(req.params.id);
 
         expect(res.status).toHaveBeenCalledWith(500);
 
