@@ -4,7 +4,7 @@
 
 ## Milestone 1
 
-URL of GitHub workflow for CI: <insert latest url here>
+URL of GitHub workflow for CI: [https://github.com/cs4218/cs4218-2420-ecom-project-team13/actions/runs/13746428393](https://github.com/cs4218/cs4218-2420-ecom-project-team13/actions/runs/13746428393)
 
 ### Setting Up
 
