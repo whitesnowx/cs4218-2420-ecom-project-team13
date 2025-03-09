@@ -24,6 +24,7 @@ export default {
   testMatch: [
     "<rootDir>/client/src/components/Form/*.test.js",
     "<rootDir>/client/src/components/UserMenu.test.js",
+    "<rootDir>/client/src/components/AdminMenu.test.js",
     "<rootDir>/client/src/context/*.test.js",
     "<rootDir>/client/src/hooks/*.test.js",
     "<rootDir>/client/src/pages/admin/*.test.js",
@@ -37,6 +38,7 @@ export default {
   collectCoverageFrom: [
     "client/src/components/Form/**",
     "client/src/components/UserMenu.{js,jsx}",
+    "client/src/components/AdminMenu.{js,jsx}",
     "client/src/context/auth.{js,jsx}", // Only covers auth in context
     "client/src/context/cart.{js,jsx}",
     "client/src/hooks/**",

@@ -5,7 +5,6 @@ import Dashboard from "./Dashboard";
 import { useAuth } from "../../context/auth";
 import "@testing-library/jest-dom/extend-expect";
 
-jest.mock('axios');
 jest.mock("../../components/Layout", () => ({
   __esModule: true,
   default: ({ children }) => <div>{children}</div>,
@@ -67,5 +66,17 @@ describe("Dashboard Component", () => {
     expect(screen.getByTestId("dashboard-name")).toHaveTextContent("");
     expect(screen.getByTestId("dashboard-email")).toHaveTextContent("");
     expect(screen.getByTestId("dashboard-address")).toHaveTextContent("");
+  });
+
+  it("renders User Menu components", () => {
+    render(
+      <MemoryRouter>
+        <Dashboard />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByText("Dashboard")).toBeInTheDocument();
+    expect(screen.getByText("Profile")).toBeInTheDocument();
+    expect(screen.getByText("Orders")).toBeInTheDocument();
   });
 });
