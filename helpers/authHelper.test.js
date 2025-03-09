@@ -56,7 +56,7 @@ describe("Compare Password Test", () => {
         expect(result).toBe(true);
     });
 
-    it("should return true for matching passwords", async () => {
+    it("should return false for non-matching passwords", async () => {
         // Arrange
         bcrypt.compare.mockResolvedValue(false);
 
