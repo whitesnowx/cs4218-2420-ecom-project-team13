@@ -47,7 +47,10 @@ export default {
     "client/src/pages/user/**",
     "client/src/pages/Contact.{js,jsx}",
     "client/src/pages/Policy.{js,jsx}",
-    "client/src/pages/CartPage.{js,jsx}"
+    "client/src/pages/CartPage.{js,jsx}",
+    "client/src/pages/ProductDetails.{js,jsx}",
+    "client/src/pages/Categories.{js,jsx}",
+    "client/src/pages/Search.{js,jsx}"
   ],
   
   coverageThreshold: {
