@@ -188,7 +188,7 @@ describe("handleSubmit() functionality", () => {
                 { name: "Plushie" }
             );
         });
-        expect(toast.error).toHaveBeenCalledWith("somthing went wrong in input form");
+        expect(toast.error).toHaveBeenCalledWith("Something went wrong in input form");
     });
 
     test("handleSubmit() cannot create new category with empty input value", async () => {
@@ -273,7 +273,7 @@ describe("getAllCategory() functionality", () => {
         await waitFor(() => {
             expect(axios.get).toHaveBeenCalledWith(`/api/v1/category/get-category`);
         });
-        expect(toast.error).toHaveBeenCalledWith("Something wwent wrong in getting catgeory");
+        expect(toast.error).toHaveBeenCalledWith("Something wwent wrong in getting category");
     });
 });
 
@@ -371,7 +371,7 @@ describe("handleUpdate() functionality", () => {
                 { name: "Plushie" }
             );
         });
-        expect(toast.error).toHaveBeenCalledWith("Somtihing went wrong");
+        expect(toast.error).toHaveBeenCalledWith("Something went wrong");
     });
 
     test("handleUpdate() fails to update category due to exception", async () => {
@@ -471,7 +471,7 @@ describe("handleDelete() functionality", () => {
             );
         });
         // show toast successful delete message
-        expect(toast.success).toHaveBeenCalledWith("category is deleted");
+        expect(toast.success).toHaveBeenCalledWith("Category is deleted");
         // ensure that the deleted category is no longer displayed
         await waitFor(() => {
             // have to use queryByText instead of getByText as getBy throws error when element cannot be found
@@ -499,7 +499,7 @@ describe("handleDelete() functionality", () => {
                 `/api/v1/category/delete-category/1`
             );
         });
-        expect(toast.error).toHaveBeenCalledWith("Somtihing went wrong");
+        expect(toast.error).toHaveBeenCalledWith("Something went wrong");
         // ensure the category is still displayed after failed deletion
         expect(screen.getByText("Electronics")).toBeInTheDocument();
     });

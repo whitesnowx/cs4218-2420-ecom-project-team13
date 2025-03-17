@@ -94,7 +94,7 @@ describe("products page renders properly", () => {
         );
         
         await waitFor(() => {
-            expect(toast.error).toHaveBeenCalledWith("Someething Went Wrong");
+            expect(toast.error).toHaveBeenCalledWith("Something went wrong");
         });
     });
 });
