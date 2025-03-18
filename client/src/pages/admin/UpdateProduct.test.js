@@ -273,6 +273,18 @@ describe("update product form functionality", () => {
     test("should call handleDelete() when delete button is clicked", async () => {
         // simulate window prompt to confirm deletion of product
         window.prompt = jest.fn(() => "yes");
+        fireEvent.click(screen.getByText("DELETE PRODUCT"));
+
+        await waitFor(() => {
+            expect(axios.delete).toHaveBeenCalledWith(
+                `/api/v1/product/delete-product/`
+            );
+        });
+    });
+    
+    test("should show toast success message if product is deleted successfully", async () => {
+        // simulate window prompt to confirm deletion of product
+        window.prompt = jest.fn(() => "yes");
 
         axios.delete.mockResolvedValueOnce({
             data: {
@@ -307,7 +319,7 @@ describe("update product form functionality", () => {
         });
 
         expect(consoleLogSpy).toHaveBeenCalled();
-        expect(toast.error).toHaveBeenCalled();
+        expect(toast.error).toHaveBeenCalledWith("Something went wrong");
     });
 
 });
