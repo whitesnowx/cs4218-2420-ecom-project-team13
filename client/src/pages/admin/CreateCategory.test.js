@@ -131,7 +131,7 @@ describe("handleSubmit() functionality", () => {
         axios.post.mockResolvedValueOnce({
             data: {
                 success: true,
-                message: "Category Already Exisits"
+                message: "Category Already Exists"
             }
         });
 
@@ -196,7 +196,7 @@ describe("handleSubmit() functionality", () => {
         axios.post.mockResolvedValueOnce({
             data: {
                 success: false,
-                message: "Errro in Category"
+                message: "Error in Category"
             }
         });
 
@@ -222,7 +222,7 @@ describe("handleSubmit() functionality", () => {
                 { name: "" }
             );
         });
-        expect(toast.error).toHaveBeenCalledWith("Errro in Category");
+        expect(toast.error).toHaveBeenCalledWith("Error in Category");
     });
 
 });
@@ -273,7 +273,7 @@ describe("getAllCategory() functionality", () => {
         await waitFor(() => {
             expect(axios.get).toHaveBeenCalledWith(`/api/v1/category/get-category`);
         });
-        expect(toast.error).toHaveBeenCalledWith("Something wwent wrong in getting category");
+        expect(toast.error).toHaveBeenCalledWith("Something went wrong in getting category");
     });
 });
 
@@ -342,39 +342,6 @@ describe("handleUpdate() functionality", () => {
     });
 
     test("handleUpdate() fails to update category due to error in PUT request", async () => {
-        // mock the failed axios PUT response
-        axios.put.mockRejectedValueOnce(new Error("Network error"));
-
-        getSingleCategoryRender();
-
-        // extract edit button HTML element & simulate clicking on it
-        await waitFor(() => {
-            expect(screen.getByText("Electronics")).toBeInTheDocument();
-        });
-        const editButton = await screen.getByText("Edit");
-        fireEvent.click(editButton);
-
-        // extract the modal that appears upon clicking edit button
-        // extract the input field (in modal) to enter updated category name
-        // extract the submit button to submit updated category name
-        // simulate value to be submitted for updated category & clicking on it
-        const updateCategoryModal = await screen.findByRole("dialog");
-        const updateCategoryModalInput = within(updateCategoryModal).getByPlaceholderText("Enter new category");
-        const updateCategoryModalSubmitButton = within(updateCategoryModal).getByText("Submit");
-        fireEvent.change(updateCategoryModalInput, { target: { value: "Plushie" } });
-        fireEvent.click(updateCategoryModalSubmitButton);
-
-        // expect failed PUT request with toast error message
-        await waitFor(() => {
-            expect(axios.put).toHaveBeenCalledWith(
-                `/api/v1/category/update-category/1`,
-                { name: "Plushie" }
-            );
-        });
-        expect(toast.error).toHaveBeenCalledWith("Something went wrong");
-    });
-
-    test("handleUpdate() fails to update category due to exception", async () => {
         // mock the failed axios PUT response with error message from API
         axios.put.mockResolvedValueOnce({
             data: {
@@ -412,6 +379,39 @@ describe("handleUpdate() functionality", () => {
         expect(toast.error).toHaveBeenCalledWith("Error while updating category");
     });
 
+    test("handleUpdate() fails to update category due to exception", async () => {
+        // mock the failed axios PUT response
+        axios.put.mockRejectedValueOnce(new Error("Network error"));
+
+        getSingleCategoryRender();
+
+        // extract edit button HTML element & simulate clicking on it
+        await waitFor(() => {
+            expect(screen.getByText("Electronics")).toBeInTheDocument();
+        });
+        const editButton = await screen.getByText("Edit");
+        fireEvent.click(editButton);
+
+        // extract the modal that appears upon clicking edit button
+        // extract the input field (in modal) to enter updated category name
+        // extract the submit button to submit updated category name
+        // simulate value to be submitted for updated category & clicking on it
+        const updateCategoryModal = await screen.findByRole("dialog");
+        const updateCategoryModalInput = within(updateCategoryModal).getByPlaceholderText("Enter new category");
+        const updateCategoryModalSubmitButton = within(updateCategoryModal).getByText("Submit");
+        fireEvent.change(updateCategoryModalInput, { target: { value: "Plushie" } });
+        fireEvent.click(updateCategoryModalSubmitButton);
+
+        // expect failed PUT request with toast error message
+        await waitFor(() => {
+            expect(axios.put).toHaveBeenCalledWith(
+                `/api/v1/category/update-category/1`,
+                { name: "Plushie" }
+            );
+        });
+        expect(toast.error).toHaveBeenCalledWith("Something went wrong");
+    });
+
 });
 
 // block for testing deletion of existing categories
@@ -437,7 +437,7 @@ describe("handleDelete() functionality", () => {
         axios.delete.mockResolvedValueOnce({
             data: {
                 success: true,
-                message: "Categry Deleted Successfully"
+                message: "Category Deleted Successfully"
             }
         });
 
@@ -480,6 +480,36 @@ describe("handleDelete() functionality", () => {
     });
 
     test("handleDelete() fails to delete category due to error in DELETE request", async () => {
+        // mock the failed axios DELETE response with API error message
+        axios.delete.mockResolvedValueOnce({
+            data: {
+                success: false,
+                message: "Error while deleting category"
+            }
+        });
+
+        getSingleCategoryRender();
+
+        // ensure the existing category is displayed
+        // extract the delete button HTML element & simulate clicking on it
+        await waitFor(() => {
+            expect(screen.getByText("Electronics")).toBeInTheDocument();
+        });
+        const deleteButton = await screen.getByText("Delete");
+        fireEvent.click(deleteButton);
+
+        // expect failed DELETE request with toast error message displaying API error message
+        await waitFor(() => {
+            expect(axios.delete).toHaveBeenCalledWith(
+                `/api/v1/category/delete-category/1`
+            );
+        });
+        expect(toast.error).toHaveBeenCalledWith("Error while deleting category");
+        // ensure the category is still displayed after failed deletion
+        expect(screen.getByText("Electronics")).toBeInTheDocument();
+    });
+
+    test("handleDelete() fails to delete category due to exception", async () => {
         // mock the failed axios DELETE response
         axios.delete.mockRejectedValueOnce(new Error("Network error"));
 
@@ -500,36 +530,6 @@ describe("handleDelete() functionality", () => {
             );
         });
         expect(toast.error).toHaveBeenCalledWith("Something went wrong");
-        // ensure the category is still displayed after failed deletion
-        expect(screen.getByText("Electronics")).toBeInTheDocument();
-    });
-
-    test("handleDelete() fails to delete category due to exception", async () => {
-        // mock the failed axios DELETE response with API error message
-        axios.delete.mockResolvedValueOnce({
-            data: {
-                success: false,
-                message: "error while deleting category"
-            }
-        });
-
-        getSingleCategoryRender();
-
-        // ensure the existing category is displayed
-        // extract the delete button HTML element & simulate clicking on it
-        await waitFor(() => {
-            expect(screen.getByText("Electronics")).toBeInTheDocument();
-        });
-        const deleteButton = await screen.getByText("Delete");
-        fireEvent.click(deleteButton);
-
-        // expect failed DELETE request with toast error message displaying API error message
-        await waitFor(() => {
-            expect(axios.delete).toHaveBeenCalledWith(
-                `/api/v1/category/delete-category/1`
-            );
-        });
-        expect(toast.error).toHaveBeenCalledWith("error while deleting category");
         // ensure the category is still displayed after failed deletion
         expect(screen.getByText("Electronics")).toBeInTheDocument();
     });
