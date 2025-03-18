@@ -44,7 +44,7 @@ describe("products page renders properly", () => {
             data: {
                 success: true,
                 counTotal: 2,
-                message: "ALlProducts ",
+                message: "AllProducts ",
                 products: [
                     {
                         _id: 1,
