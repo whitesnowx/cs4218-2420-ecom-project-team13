@@ -86,7 +86,7 @@ describe("getAllCategory() functionality", () => {
                 `/api/v1/category/get-category`
             );
         });
-        expect(toast.error).toHaveBeenCalledWith("Something wwent wrong in getting catgeory");
+        expect(toast.error).toHaveBeenCalledWith("Something went wrong in getting category");
     });
 
 });
@@ -172,6 +172,19 @@ describe("create product form functionality", () => {
     });
 
     test("should call handleCreate() when create button is clicked", async () => {
+        render(<CreateProduct />);
+
+        fireEvent.click(await screen.findByText("CREATE PRODUCT"));
+
+        await waitFor(() => {
+            expect(axios.post).toHaveBeenCalledWith(
+                `/api/v1/product/create-product`,
+                expect.any(FormData)
+            );
+        });
+    });
+
+    test("should show toast success message on successful product creation", async () => {
         // fake category response
         const mockCategories = {
             data: {
@@ -223,6 +236,76 @@ describe("create product form functionality", () => {
             );
         });
         expect(toast.success).toHaveBeenCalledWith("Product Created Successfully");
+    });
+
+    test("should show toast error message on failure to create product", async () => {
+        // fake category response
+        const mockCategories = {
+            data: {
+                category: [
+                    { _id: 1, name: "Electronics" },
+                    { _id: 2, name: "Books" }
+                ]
+            }
+        };
+
+        // mock axios responses
+        axios.get.mockImplementation((url) => {
+            if (url.includes("/api/v1/category/get-category")) {
+                return Promise.resolve(mockCategories);
+            }
+        });
+
+        render(<CreateProduct />);
+
+        // fake product response
+        const mockProduct = {
+            data: {
+                product: {
+                    _id: 1,
+                    name: "Calculator",
+                    description: "this is a calculator",
+                    price: 19,
+                    quantity: 1,
+                    shipping: true,
+                    category: { _id: "1", name: "Electronics" },
+                }
+            }
+        };
+
+        axios.post.mockResolvedValueOnce({
+            data: {
+                success: false,
+                message: "Error in creating product",
+                products: mockProduct
+            }
+        });
+
+        fireEvent.click(await screen.findByText("CREATE PRODUCT"));
+
+        await waitFor(() => {
+            expect(axios.post).toHaveBeenCalledWith(
+                `/api/v1/product/create-product`,
+                expect.any(FormData)
+            );
+        });
+        expect(toast.error).toHaveBeenCalledWith("Error in creating product");
+    });
+
+    test("handleCreate() fails due to error in POST request", async () => {
+        axios.post.mockRejectedValueOnce(new Error("Network error"));
+
+        render(<CreateProduct />);
+
+        fireEvent.click(await screen.findByText("CREATE PRODUCT"));
+
+        await waitFor(() => {
+            expect(axios.post).toHaveBeenCalledWith(
+                `/api/v1/product/create-product`,
+                expect.any(FormData)
+            );
+        });
+        expect(toast.error).toHaveBeenCalledWith("Something went wrong");
     });
 
 });
