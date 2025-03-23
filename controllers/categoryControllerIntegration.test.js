@@ -18,10 +18,7 @@ beforeAll(async () => {
   // Start in-memory MongoDB
   mongod = await MongoMemoryServer.create();
   const uri = mongod.getUri();
-  await mongoose.connect(uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  await mongoose.connect(uri);
 
   app = express();
   app.use(express.json());
