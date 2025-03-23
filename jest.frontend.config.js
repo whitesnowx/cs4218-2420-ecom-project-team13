@@ -32,9 +32,6 @@ export default {
     "<rootDir>/client/src/pages/user/*.test.js",
     "<rootDir>/client/src/pages/*.test.js",
   ],
-  testPathIgnorePatterns: [
-    "<rootDir>/.*\\.integration\\.test\\.js$"
-  ],
 
   // jest code coverage
   collectCoverage: true,

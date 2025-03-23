@@ -17,12 +17,12 @@ export default {
     "<rootDir>/helpers/*.test.js",
     "<rootDir>/middlewares/*.test.js",
   ],
-  testPathIgnorePatterns: [
-    "<rootDir>/.*\\.integration\\.test\\.js$"
-  ],
+  // testPathIgnorePatterns: [
+  //   "<rootDir>/.*\\.integration\\.test\\.js$"
+  // ],
 
   // configure dotenv file to .env.test
-  setupFiles: ["<rootDir>/jest.backend.setup.js"],
+  // setupFiles: ["<rootDir>/jest.backend.setup.js"],
 
   // jest code coverage
   collectCoverage: true,
