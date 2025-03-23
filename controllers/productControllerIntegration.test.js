@@ -15,19 +15,14 @@ let mongod;
 
 let testCategory, validProduct, mockProducts, photoTemplate;
 
-
-
-// jest.spyOn(console, "error").mockImplementation(() => {});
-// jest.spyOn(console, "log").mockImplementation(() => {});
+jest.spyOn(console, "error").mockImplementation(() => {});
+jest.spyOn(console, "log").mockImplementation(() => {});
   
 
 beforeAll(async () => {
     mongod = await MongoMemoryServer.create();
     const uri = mongod.getUri();
-    await mongoose.connect(uri, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    });
+    await mongoose.connect(uri);
 
     app = express();
     // app.use(formidable());

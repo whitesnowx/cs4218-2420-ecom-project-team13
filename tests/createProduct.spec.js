@@ -70,9 +70,9 @@ test.describe("Create Product Test", () => {
 
     await page.getByRole('button', { name: 'CREATE PRODUCT' }).click();
 
-    await delay(8000);
+    await expect(page).toHaveURL(/\/dashboard\/admin\/products/, { timeout: 10000 });
 
-    await expect(page.getByRole('main')).toContainText('Wallpaper Album');
+    await expect(page.getByRole('main')).toContainText('Wallpaper Album', { timeout: 15000 });
     await expect(page.getByRole('main')).toContainText('A list of wallpaper designs');
 
     await page.getByRole('link', { name: '🛒 Virtual Vault' }).click();
@@ -80,8 +80,6 @@ test.describe("Create Product Test", () => {
     await delay(8000);
 
     await page.getByRole('button', { name: 'Loadmore' }).click();
-
-    // await delay(8000);
 
     await expect(page.getByText('Wallpaper Album$25.00A list').first()).toBeVisible();
     await expect(page.getByRole('main')).toContainText('Wallpaper Album');

@@ -84,7 +84,7 @@ test.describe("Update Product Test", () => {
 
   test("should update an existing product", async ({ page }) => {
     await page.getByText('Wallpaper Album').first().click();
-    await page.getByTitle('Books').click();
+    await page.locator('div').filter({ hasText: /^Books$/ }).first().click();
     await page.getByTitle('Electronics').locator('div').click();
    
     await page.getByText('Upload Photo').click();
@@ -111,6 +111,20 @@ test.describe("Update Product Test", () => {
     await expect(page.getByRole('main')).toContainText('Electronic Wallpaper', { timeout: 15000 });
 
     await expect(page.getByRole('main')).toContainText('Wallpaper device');
+    
+  }, 60000);
+
+
+  test("should update an existing product without changing anything", async ({ page }) => {
+    await page.getByText('Wallpaper Album').first().click();
+
+    await delay(2000);
+   
+    await page.getByRole('button', { name: 'UPDATE PRODUCT' }).click();
+
+    await expect(page.getByRole('main')).toContainText('Wallpaper Album', { timeout: 15000 });
+
+    await expect(page.getByRole('main')).toContainText('A list of wallpaper designs');
     
   }, 60000);
 
