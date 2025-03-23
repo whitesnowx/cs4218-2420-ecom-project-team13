@@ -9,22 +9,22 @@ export const registerController = async (req, res) => {
     const { name, email, password, phone, address, answer } = req.body;
     //validations
     if (!name) {
-      return res.send({ message: "Name is required" });
+      return res.status(400).send({ message: "Name is required" });
     }
     if (!email) {
-      return res.send({ message: "Email is required" });
+      return res.status(400).send({ message: "Email is required" });
     }
     if (!password) {
-      return res.send({ message: "Password is required" });
+      return res.status(400).send({ message: "Password is required" });
     }
     if (!phone) {
-      return res.send({ message: "Phone no is required" });
+      return res.status(400).send({ message: "Phone no is required" });
     }
     if (!address) {
-      return res.send({ message: "Address is required" });
+      return res.status(400).send({ message: "Address is required" });
     }
     if (!answer) {
-      return res.send({ message: "Answer is required" });
+      return res.status(400).send({ message: "Answer is required" });
     }
     //check user
     const existingUser = await userModel.findOne({ email });
@@ -68,7 +68,7 @@ export const loginController = async (req, res) => {
     const { email, password } = req.body;
     //validation
     if (!email || !password) {
-      return res.status(200).send({
+      return res.status(400).send({
         success: false,
         message: "Invalid email or password",
       });
@@ -76,7 +76,7 @@ export const loginController = async (req, res) => {
     //check user
     const user = await userModel.findOne({ email });
     if (!user) {
-      return res.status(200).send({
+      return res.status(404).send({
         success: false,
         message: "Email is not registered",
       });
@@ -85,7 +85,7 @@ export const loginController = async (req, res) => {
     // possible bug? - don't explicitly mention that the password is incorrect
     //               - could combine with email not registered
     if (!match) {
-      return res.status(200).send({
+      return res.status(401).send({
         success: false,
         message: "Invalid Password",
       });
@@ -123,13 +123,13 @@ export const forgotPasswordController = async (req, res) => {
   try {
     const { email, answer, newPassword } = req.body;
     if (!email) {
-      res.status(200).send({ message: "Email is required" });
+      return res.status(400).send({ message: "Email is required" });
     }
     if (!answer) {
-      res.status(200).send({ message: "Answer is required" });
+      return res.status(400).send({ message: "Answer is required" });
     }
     if (!newPassword) {
-      res.status(200).send({ message: "New Password is required" });
+      return res.status(400).send({ message: "New Password is required" });
     }
     //check
     const user = await userModel.findOne({ email, answer });
