@@ -4,14 +4,14 @@ test.describe("Admin dashboard UI tests", () => {
     test.beforeEach(async ({ page }) => {
         await page.goto("http://localhost:3000/");
         await page.getByRole('link', { name: 'Login' }).click();
-        await page.getByRole('textbox', { name: 'Enter Your Email' }).fill('abc@gmail.com');
-        await page.getByRole('textbox', { name: 'Enter Your Password' }).fill('abc');
+        await page.getByRole('textbox', { name: 'Enter Your Email' }).fill('admin@admin.com');
+        await page.getByRole('textbox', { name: 'Enter Your Password' }).fill('admin');
         await page.getByRole('button', { name: 'LOGIN' }).click();
         await page.waitForURL("http://localhost:3000/");
       });
       
       test.afterEach(async ({ page }) => {
-          await page.getByRole('button', { name: 'abc' }).click();
+          await page.getByRole('button', { name: 'MyAdmin' }).click();
           await page.getByText("LOGOUT").click();
           await page.getByRole('link', { name: 'LOGIN' }).waitFor();
       })
@@ -64,11 +64,11 @@ test.describe("Admin dashboard UI tests", () => {
   }) => {
     await page.goto("http://localhost:3000");
     await page.waitForURL("http://localhost:3000");
-    await page.getByRole('button', { name: 'abc' }).click();
+    await page.getByRole('button', { name: 'MyAdmin' }).click();
     await page.getByRole('link', { name: 'Dashboard' }).click();
     await expect(page.getByRole('heading', { name: 'Admin Panel' })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Admin Name : abc' })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Admin Email : abc@gmail.com' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Admin Name : MyAdmin' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Admin Email : admin@admin.com' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Admin Contact :' })).toBeVisible();
   });
 });

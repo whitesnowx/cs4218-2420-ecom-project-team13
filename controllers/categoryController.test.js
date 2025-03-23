@@ -125,7 +125,7 @@ describe("Update Category Controller Test", () => {
         };
     });
 
-    test("should update category if it exists and is not duplciated", async () => {
+    test("should update category if it exists and is not duplicated", async () => {
         categoryModel.findOne.mockResolvedValue(null);
         categoryModel.findByIdAndUpdate = jest.fn().mockResolvedValue({
             _id: req.params.id,

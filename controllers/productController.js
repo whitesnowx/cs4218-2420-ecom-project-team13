@@ -123,6 +123,9 @@ export const getSingleProductController = async (req, res) => {
 export const productPhotoController = async (req, res) => {
   try {
     const product = await productModel.findById(req.params.pid).select("photo");
+    if (!product) {
+      return res.status(404).send({ success: false, message: "Product not found" });
+    }
     if (product.photo.data) {
       res.set("Content-type", product.photo.contentType);
       return res.status(200).send(product.photo.data);
@@ -178,14 +181,8 @@ export const updateProductController = async (req, res) => {
         return res.status(500).send({ error: "Category is Required" });
       case !quantity:
         return res.status(500).send({ error: "Quantity is Required" });
-      case !photo:
-        return res
-          .status(500)
-          .send({ error: "Photo is Required" });
       case photo && photo.size > 1000000:
-        return res
-            .status(500)
-            .send({ error: "Photo should be less then 1mb" });
+        return res.status(500).send({ error: "Photo is required and Photo should be less than 1mb" });
     }
 
     const products = await productModel.findByIdAndUpdate(
@@ -197,7 +194,7 @@ export const updateProductController = async (req, res) => {
       products.photo.data = fs.readFileSync(photo.path);
       products.photo.contentType = photo.type;
     }
-    // await products.save();
+    await products.save();
     res.status(201).send({
       success: true,
       message: "Product Updated Successfully",
@@ -238,7 +235,7 @@ export const productFiltersController = async (req, res) => {
 // product count
 export const productCountController = async (req, res) => {
   try {
-    const total = await productModel.find({}).estimatedDocumentCount();
+    const total = await productModel.estimatedDocumentCount();
     res.status(200).send({
       success: true,
       total,
@@ -394,8 +391,10 @@ export const brainTreePaymentController = async (req, res) => {
             payment: result,
             buyer: req.user._id,
           }).save();
-          res.json({ ok: true });
+          // console.log("Successfully Created Order:", order);
+          res.json({ ok: true, order });
         } else {
+          // console.error("Order Save Error:", saveError);
           res.status(500).send(error);
         }
       }
