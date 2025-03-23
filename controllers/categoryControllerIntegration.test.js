@@ -6,7 +6,6 @@ import { categoryControlller, createCategoryController, deleteCategoryCOntroller
 import categoryModel from "../models/categoryModel.js";
 import slugify from "slugify";
 import { expect } from "@playwright/test";
-import { describe } from "node:test";
 import { jest } from "@jest/globals";
 
 let app;
@@ -19,10 +18,7 @@ beforeAll(async () => {
   // Start in-memory MongoDB
   mongod = await MongoMemoryServer.create();
   const uri = mongod.getUri();
-  await mongoose.connect(uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  await mongoose.connect(uri);
 
   app = express();
   app.use(express.json());
@@ -243,7 +239,7 @@ describe("Integration Tests for Category Controllers", () => {
   });
 
 
-  describe("deleteCategoryController", async () => {
+  describe("deleteCategoryController", () => {
     test("should delete the category successfully", async () => {
         const category = await categoryModel.create({ name: "Books", slug: slugify("Books")});
 
