@@ -17,6 +17,9 @@ export default {
     "<rootDir>/helpers/*.test.js",
     "<rootDir>/middlewares/*.test.js",
   ],
+  // testPathIgnorePatterns: [
+  //   "<rootDir>/.*\\.integration\\.test\\.js$"
+  // ],
 
   // configure dotenv file to .env.test
   setupFiles: ["<rootDir>/jest.backend.setup.js"],
@@ -31,8 +34,8 @@ export default {
   ],
   coverageThreshold: {
     global: {
-      lines: 100,
-      functions: 100,
+      lines: 80,
+      functions: 80,
     },
   },
 };

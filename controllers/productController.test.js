@@ -363,6 +363,22 @@ describe("Get Single Product Controller Test", () => {
 
   });
 
+  test("should return 404 when product is not found", async() => {
+    productModel.findOne.mockImplementation(() => ({
+      select: jest.fn().mockReturnThis(),
+      populate: jest.fn().mockResolvedValue(null),
+    }));
+
+    await getSingleProductController(req, res);
+
+    expect(productModel.findOne).toHaveBeenCalledWith({ slug: req.params.slug });
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.send).toHaveBeenCalledWith({
+      success: false,
+      message: "Product not found",
+    });
+  });
+
   test("should return 500 when an error occurs", async () => {
     
     productModel.findOne.mockImplementation(() => {
@@ -425,6 +441,23 @@ describe("Product Photo Controller Test", () => {
 
   });
 
+  test("should return 404 when a photo is not found", async () => {
+    productModel.findById.mockImplementation(() => ({
+      select: jest.fn().mockResolvedValue({
+        id: validProduct.pid,
+        photo: {},
+      }),
+    }));
+
+    await productPhotoController(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.send).toHaveBeenCalledWith({
+      success: false,
+      message: "Photo not found",
+    });
+
+  });
 
   test("should return 500 when an error occurs", async () => {
     productModel.findById.mockImplementation(() => {
@@ -542,6 +575,7 @@ describe("Update Product Controller Test", () => {
 
     productModel.findByIdAndUpdate = jest.fn().mockResolvedValue({
       ...validProduct,
+      save: jest.fn(),
       photo: {
         data: Buffer.from("mockImageData"),
         contentType: "image/jpeg",
@@ -572,6 +606,21 @@ describe("Update Product Controller Test", () => {
     );
   });
 
+  test("should update successfully when field photo is missing", async () => {
+
+    req.files = {};
+
+    await updateProductController(req, res);
+    
+    expect(res.status).toHaveBeenCalledWith(201);
+    expect(res.send).toHaveBeenCalledWith(
+      expect.objectContaining({
+        success: true,
+        message: "Product Updated Successfully",
+        products: expect.any(Object),
+      })
+    );
+  });
 
   test("should return error when field name is missing", async () => {
 
@@ -646,20 +695,6 @@ describe("Update Product Controller Test", () => {
     );
   });
 
-  test("should return error when field photo is missing", async () => {
-
-    req.files = {};
-
-    await updateProductController(req, res);
-    
-    expect(res.status).toHaveBeenCalledWith(500);
-    expect(res.send).toHaveBeenCalledWith(
-      expect.objectContaining({
-        error: "Photo is Required",
-      })
-    );
-  });
-
   test("should return error when photo size exceeds 1MB", async () => {
 
     req.files.photo = {
@@ -672,7 +707,7 @@ describe("Update Product Controller Test", () => {
     
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.send).toHaveBeenCalledWith({
-        error: "Photo should be less then 1mb",
+        error: "Photo is required and Photo should be less than 1mb",
       });
   });
 
@@ -819,13 +854,11 @@ describe("Product Count Controller Test", () => {
   test("should return product count successfully", async () => {
     const mockCount = 10;
 
-    productModel.find.mockReturnValue({
-      estimatedDocumentCount: jest.fn().mockResolvedValue(mockCount),
-    });
+    productModel.estimatedDocumentCount = jest.fn().mockResolvedValue(mockCount);
 
     await productCountController(req, res);
 
-    expect(productModel.find).toHaveBeenCalledWith({});
+    expect(productModel.estimatedDocumentCount).toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.send).toHaveBeenCalledWith({
       success: true,
@@ -836,11 +869,11 @@ describe("Product Count Controller Test", () => {
 
   test("should return 400 when an error occurs", async () => {
   
-    productModel.find.mockReturnValue({
-      estimatedDocumentCount: jest.fn().mockRejectedValue(mockError),
-    });
+    productModel.estimatedDocumentCount = jest.fn().mockRejectedValue(mockError);
 
     await productCountController(req, res);
+
+    expect(productModel.estimatedDocumentCount).toHaveBeenCalled();
 
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.send).toHaveBeenCalledWith({
@@ -1126,6 +1159,18 @@ describe("Product Category Controller Test", () => {
       success: true,
       category: mockCategoryPC,
       products: mockProductPC,
+    });
+  });
+
+  test("should return 404 when the category is not found", async () => {
+    categoryModel.findOne.mockResolvedValue(null);
+
+    await productCategoryController(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.send).toHaveBeenCalledWith({
+      success: false, 
+      message: "Category not found",
     });
   });
 
