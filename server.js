@@ -56,3 +56,6 @@ process.on("SIGTERM", async () => {
     console.log("SIGTERM signal received: closing HTTP server");
     await cleanup();
 });
+
+
+export default app;
