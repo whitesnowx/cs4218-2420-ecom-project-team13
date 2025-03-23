@@ -28,7 +28,7 @@ describe("Payment Integration Tests", () => {
       .get("/api/v1/product/braintree/token")
       .set("Authorization", `${token}`);
 
-      console.log("Response:", response.body); 
+      // console.log("Response:", response.body); 
 
     expect(response.status).toBe(200);
     expect(response.body.clientToken).toBeDefined();
@@ -46,7 +46,7 @@ describe("Payment Integration Tests", () => {
 
     const nonce = tokenResponse.body.clientToken; 
     
-console.log("retrieved clientToken:", nonce);
+// console.log("retrieved clientToken:", nonce);
 
     const response = await request(app)
       .post("/api/v1/product/braintree/payment")
