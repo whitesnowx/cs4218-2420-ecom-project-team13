@@ -12,7 +12,7 @@ export default {
 
   // which test to run
   testMatch: [
-    "<rootDir>/**/*.integration.test.js"
+    "<rootDir>/tests-integration/*.integration.test.js"
   ],
 
   // configure dotenv file to .env.test

@@ -22,7 +22,7 @@ export default {
   // ],
 
   // configure dotenv file to .env.test
-  // setupFiles: ["<rootDir>/jest.backend.setup.js"],
+  setupFiles: ["<rootDir>/jest.backend.setup.js"],
 
   // jest code coverage
   collectCoverage: true,
@@ -30,8 +30,7 @@ export default {
     "controllers/**",
     "config/**",
     "helpers/**",
-    "middlewares/**",
-    "!**/*.integration.test.js"
+    "middlewares/**"
   ],
   coverageThreshold: {
     global: {
