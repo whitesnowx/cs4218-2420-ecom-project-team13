@@ -50,6 +50,33 @@ URL of GitHub workflow for CI: [https://github.com/cs4218/cs4218-2420-ecom-proje
     BRAINTREE_PUBLIC_KEY = <insert braintree public key>
     BRAINTREE_PRIVATE_KEY = <insert braintree private key>
     ```
+
+7. Create a `.env.integration.test` with your sandboxed and testing environment variables under the root directory.
+    ```ml
+    # SonarQube server settings
+    sonar.host.url=http://localhost:9000
+    sonar.token=squ_df20309eefd2dec350d28dca56237b28089f665f # replace with your token
+
+    # Project identification
+    sonar.projectKey=econ
+    sonar.projectName=econ
+    sonar.projectVersion=1.0
+
+    # Analysis settings
+    sonar.sources=client
+
+    # Coverage report path
+    sonar.javascript.lcov.reportPaths=coverage/lcov.info
+
+    # Specify JavaScript as the main language
+    sonar.language=js
+
+    # Limit analysis to JavaScript files in the specifiee sources
+    sonar.inclusions=**/*.js
+
+    sonar.exclusions=**/*.test.js
+    ```
+
 ### Usage
 
 > Make sure that you are in the root directory when you run these commands.
@@ -80,3 +107,13 @@ URL of GitHub workflow for CI: [https://github.com/cs4218/cs4218-2420-ecom-proje
 > All files |       0 |        0 |       0 |       0 |                  
 > ----------|---------|----------|---------|---------|-------------------
 >```
+
+# Generating SonarQube Report
+
+1. Generate test coverage report for frontend, backend and integration
+    * `npm run test:frontend`
+    * `npm run test:backend`
+    * `npm run test:integration`
+2. start sonarqube
+3. update sonar.token in `sonar-project.properties`
+4. run sonar-scanner: `npm run sonarqube`
