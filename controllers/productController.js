@@ -391,8 +391,10 @@ export const brainTreePaymentController = async (req, res) => {
             payment: result,
             buyer: req.user._id,
           }).save();
-          res.json({ ok: true });
+          // console.log("Successfully Created Order:", order);
+          res.json({ ok: true, order });
         } else {
+          // console.error("Order Save Error:", saveError);
           res.status(500).send(error);
         }
       }
