@@ -32,6 +32,9 @@ export default {
     "<rootDir>/client/src/pages/user/*.test.js",
     "<rootDir>/client/src/pages/*.test.js",
   ],
+  testPathIgnorePatterns: [
+    "<rootDir>/.*\\.integration\\.test\\.js$"
+  ],
 
   // jest code coverage
   collectCoverage: true,
@@ -50,7 +53,8 @@ export default {
     "client/src/pages/CartPage.{js,jsx}",
     "client/src/pages/ProductDetails.{js,jsx}",
     "client/src/pages/Categories.{js,jsx}",
-    "client/src/pages/Search.{js,jsx}"
+    "client/src/pages/Search.{js,jsx}",
+    "!**/*.integration.test.js"
   ],
   
   coverageThreshold: {

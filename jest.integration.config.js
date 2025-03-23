@@ -1,6 +1,6 @@
 export default {
   // display name
-  displayName: "backend",
+  displayName: "intergration",
 
   // when testing backend
   testEnvironment: "node",
@@ -12,26 +12,16 @@ export default {
 
   // which test to run
   testMatch: [
-    "<rootDir>/controllers/*.test.js",
-    "<rootDir>/config/*.test.js",
-    "<rootDir>/helpers/*.test.js",
-    "<rootDir>/middlewares/*.test.js",
-  ],
-  testPathIgnorePatterns: [
-    "<rootDir>/.*\\.integration\\.test\\.js$"
+    "<rootDir>/**/*.integration.test.js"
   ],
 
   // configure dotenv file to .env.test
-  setupFiles: ["<rootDir>/jest.backend.setup.js"],
+  setupFiles: ["<rootDir>/jest.integration.setup.js"],
 
   // jest code coverage
   collectCoverage: true,
   collectCoverageFrom: [
-    "controllers/**",
-    "config/**",
-    "helpers/**",
-    "middlewares/**",
-    "!**/*.integration.test.js"
+    "**/*.integration.test.js"
   ],
   coverageThreshold: {
     global: {
