@@ -35,6 +35,7 @@ describe("Payment Integration Tests", () => {
         
         connectDB();
         await mongoose.connection.createCollection("users");
+        // await mongoose.connection.createCollection("orders");
         // await mongoose.connection.createCollection("categories");
 
         const response = await userModel.create(user);
@@ -46,11 +47,41 @@ describe("Payment Integration Tests", () => {
         // console.log("--> Login Response:", authResponse.body);
         // console.log("--> Status Code:", authResponse.status); // 200 | Success
         token = authResponse.body.token; 
+
+        const category = new categoryModel({
+          name: "Books",
+          description: "All types of books"
+        });
+        await category.save();
+        
+        const product1 = new productModel({
+          name: "Textbook",
+          slug: "textbook",
+          description: "A comprehensive textbook",
+          price: 79.99,
+          category: category._id,
+          quantity: 100,
+          shipping: true
+        })
+        const product2 = new productModel({
+          name: "Notebook",
+          slug: "notebook",
+          description: "A handy notebook",
+          price: 9.99,
+          category: category._id,
+          quantity: 20,
+          shipping: true
+        })
+        await product1.save();
+        await product2.save();
+        
+        cart = [product1, product2];
       });
 
   afterAll(async () => {
     await userModel.deleteOne({ email: user.email });
     await mongoose.connection.db.collection("users").deleteMany({});
+    // await mongoose.connection.db.collection("orders").deleteMany({});
     await mongoose.connection.close();
   });
 
@@ -64,34 +95,6 @@ describe("Payment Integration Tests", () => {
   });
 
   it("should process a payment successfully", async () => {
-    const category = new categoryModel({
-      name: "Books",
-      description: "All types of books"
-    });
-    await category.save();
-    
-    const product1 = new productModel({
-      name: "Textbook",
-      slug: "textbook",
-      description: "A comprehensive textbook",
-      price: 79.99,
-      category: category._id,
-      quantity: 100,
-      shipping: true
-    })
-    const product2 = new productModel({
-      name: "Notebook",
-      slug: "notebook",
-      description: "A handy notebook",
-      price: 9.99,
-      category: category._id,
-      quantity: 20,
-      shipping: true
-    })
-    await product1.save();
-    await product2.save();
-    
-    cart = [product1, product2];
     
     const tokenResponse = await request(app)
         .get("/api/v1/product/braintree/token")
@@ -111,4 +114,90 @@ describe("Payment Integration Tests", () => {
     expect(savedOrder).toBeTruthy();
     expect(savedOrder.products.length).toBe(cart.length);
   });
+
+
+  // it.failing("should fail to process with invalid token", async () => {
+  //   consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+  
+  //   const invalidToken = "bad_token";
+    
+    
+  //   const tokenResponse = await request(app)
+  //     .get("/api/v1/product/braintree/token")
+  //     .set("Authorization", `${token}`);
+
+  //   const nonce = tokenResponse.body.clientToken; 
+    
+  //   const response = await request(app)
+  //     .post("/api/v1/product/braintree/payment")
+  //     .set("Authorization", `${invalidToken}`)
+  //     .send({ nonce, cart });
+    
+  //   consoleSpy.mockRestore();
+  // });
+
+
+  // it("should fail to process payment if Braintree payment fails", async () => {
+  //   const tokenResponse = await request(app)
+  //     .get("/api/v1/product/braintree/token")
+  //     .set("Authorization", `${token}`);
+  
+  //   const nonce = "invalid_nonce";
+  
+  //   const response = await request(app)
+  //     .post("/api/v1/product/braintree/payment")
+  //     .set("Authorization", `${token}`)
+  //     .send({ nonce, cart });
+  
+  //   expect(response.status).toBe(500);
+  //   expect(response.body.error).toBe("Payment processing failed");
+  // });
+  
+  // it("should create an order after successful payment", async () => {
+  //   const tokenResponse = await request(app)
+  //     .get("/api/v1/product/braintree/token")
+  //     .set("Authorization", `${token}`);
+  
+  //   const nonce = tokenResponse.body.clientToken;
+  
+  //   const response = await request(app)
+  //     .post("/api/v1/product/braintree/payment")
+  //     .set("Authorization", `${token}`)
+  //     .send({ nonce, cart });
+  
+  //   expect(response.status).toBe(200);
+  //   expect(response.body.ok).toBe(true);
+  
+  //   // Check if order exists in the database
+  //   const savedOrder = await orderModel.findOne({ buyer: jwt.verify(token, process.env.JWT_SECRET)._id });
+  //   expect(savedOrder).toBeTruthy();
+  //   expect(savedOrder.products.length).toBe(cart.length);
+  //   expect(savedOrder.buyer.toString()).toBe(jwt.verify(token, process.env.JWT_SECRET)._id.toString());
+  // });
+
+  // it("should handle Braintree payment errors", async () => {
+  //   // Mock the Braintree API call to simulate an error
+  //   jest.mock('braintree', () => ({
+  //     gateway: () => ({
+  //       transaction: {
+  //         sale: jest.fn().mockRejectedValue(new Error("Payment failed"))
+  //       }
+  //     })
+  //   }));
+  
+  //   const tokenResponse = await request(app)
+  //     .get("/api/v1/product/braintree/token")
+  //     .set("Authorization", `${token}`);
+  
+  //   const nonce = tokenResponse.body.clientToken;
+  
+  //   const response = await request(app)
+  //     .post("/api/v1/product/braintree/payment")
+  //     .set("Authorization", `${token}`)
+  //     .send({ nonce, cart });
+  
+  //   expect(response.status).toBe(500);
+  //   expect(response.body.error).toBe("Payment failed");
+  // });
+
 });
