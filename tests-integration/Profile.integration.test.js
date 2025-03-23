@@ -1,4 +1,4 @@
-import axios from "axios";
+// import axios from "axios";
 import mongoose from "mongoose";
 import userModel from "../models/userModel.js";
 import { hashPassword } from "../helpers/authHelper.js";

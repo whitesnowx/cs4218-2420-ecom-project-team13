@@ -1,17 +1,46 @@
 import request from "supertest";
 import app from "../server"; 
 import mongoose from "mongoose";
+import userModel from "../models/userModel.js";
+import productModel from "../models/productModel.js";
+import categoryModel from "../models/categoryModel.js";
+import { hashPassword } from "../helpers/authHelper.js";
 import orderModel from "../models/orderModel.js";
 import jwt  from "jsonwebtoken";
+import connectDB from "../config/db.js"
+import { BiCategory } from "react-icons/bi";
 
-let token = "";
+
+let token;
+let user;
+let cart;
 
 // jest.setTimeout(20000); // 10 seconds, adjust later
 
 
 describe("Payment Integration Tests", () => {
+  const password = "JeffPassword";
     beforeAll(async () => {
-        const userCredentials = { email: "paymenttest@test.com", password: "test" };
+        const hashedPassword = await hashPassword(password);
+      
+        user = {
+          name: "Jeff Test",
+          email: "payment_test@test.com",
+          password: hashedPassword,
+          phone: "99991111",
+          address: "Blk 17 Test Street 38",
+          answer: "shopping",
+          role: 0,
+        };
+        
+        connectDB();
+        await mongoose.connection.createCollection("users");
+        // await mongoose.connection.createCollection("categories");
+
+        const response = await userModel.create(user);
+        
+
+        const userCredentials = { email: "payment_test@test.com", password: "JeffPassword" };
         const authResponse = await request(app).post("/api/v1/auth/login").send(userCredentials);
         
         // console.log("--> Login Response:", authResponse.body);
@@ -20,6 +49,8 @@ describe("Payment Integration Tests", () => {
       });
 
   afterAll(async () => {
+    await userModel.deleteOne({ email: user.email });
+    await mongoose.connection.db.collection("users").deleteMany({});
     await mongoose.connection.close();
   });
 
@@ -28,17 +59,39 @@ describe("Payment Integration Tests", () => {
       .get("/api/v1/product/braintree/token")
       .set("Authorization", `${token}`);
 
-      // console.log("Response:", response.body); 
-
     expect(response.status).toBe(200);
     expect(response.body.clientToken).toBeDefined();
   });
 
   it("should process a payment successfully", async () => {
-    const cart = [
-        { _id: "660c2f9e8a9b8b001c4e45e9" },
-        { _id: "660c2fa28a9b8b001c4e45ea" }
-      ];
+    const category = new categoryModel({
+      name: "Books",
+      description: "All types of books"
+    });
+    await category.save();
+    
+    const product1 = new productModel({
+      name: "Textbook",
+      slug: "textbook",
+      description: "A comprehensive textbook",
+      price: 79.99,
+      category: category._id,
+      quantity: 100,
+      shipping: true
+    })
+    const product2 = new productModel({
+      name: "Notebook",
+      slug: "notebook",
+      description: "A handy notebook",
+      price: 9.99,
+      category: category._id,
+      quantity: 20,
+      shipping: true
+    })
+    await product1.save();
+    await product2.save();
+    
+    cart = [product1, product2];
     
     const tokenResponse = await request(app)
         .get("/api/v1/product/braintree/token")
@@ -46,8 +99,6 @@ describe("Payment Integration Tests", () => {
 
     const nonce = tokenResponse.body.clientToken; 
     
-// console.log("retrieved clientToken:", nonce);
-
     const response = await request(app)
       .post("/api/v1/product/braintree/payment")
       .set("Authorization", `${token}`)
@@ -55,10 +106,6 @@ describe("Payment Integration Tests", () => {
 
     expect(response.status).toBe(200);
     expect(response.body.ok).toBe(true);
-
-    
-    // console.log("CHARIZARD: ", jwt.verify(token, process.env.JWT_SECRET))
-    // console.log("token._id: ", jwt.verify(token, process.env.JWT_SECRET)._id)
 
     const savedOrder = await orderModel.findOne({ buyer: jwt.verify(token, process.env.JWT_SECRET)._id });
     expect(savedOrder).toBeTruthy();
