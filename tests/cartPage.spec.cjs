@@ -74,12 +74,13 @@ test.describe('logged in', () => {
     });
 
     test.describe('have items', () => {
+        let singlepriceRef;
         let totalpriceRef;
         test.beforeEach(async ({ page }) => {
             await page.goto('http://localhost:3000');  
             const priceText = await page.locator(' .card-title.card-price').first().innerText();
-            const priceNum = parseFloat(priceText.replace('$', '')); // Remove "$" and convert to a number
-            totalpriceRef = priceNum * 2; // Get 2x the price
+            singlepriceRef = parseFloat(priceText.replace('$', '')); // Remove "$" and convert to a number
+            totalpriceRef = singlepriceRef * 2; // Get 2x the price
             // const formattedDoublePrice = `$${doublePrice.toFixed(2)}`;
             // console.log(formattedDoublePrice);
 
@@ -122,6 +123,21 @@ test.describe('logged in', () => {
             expect(buttonColorWhenEnabled).toBe('rgb(13, 110, 253)'); 
             
         });
+
+        test('remove items', async ({ page }) => {
+
+            const removeBtn = await page.locator('.row.card.flex-row .btn.btn-danger').first();
+            await expect(removeBtn).toBeVisible();
+            await expect(removeBtn).toContainText('Remove');
+        
+            const buttonColorWhenEnabled = await removeBtn.evaluate(button => window.getComputedStyle(button).backgroundColor);
+            expect(buttonColorWhenEnabled).toBe('rgb(220, 53, 69)'); 
+            
+            await removeBtn.click();
+
+            const totalPrice = await page.locator('.cart-summary h4').nth(0);
+            await expect(totalPrice).toContainText(`Total : $${singlepriceRef.toFixed(2)}`);
+            
+        });
     });
 });
-
