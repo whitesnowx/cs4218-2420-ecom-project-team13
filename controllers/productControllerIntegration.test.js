@@ -15,10 +15,8 @@ let mongod;
 
 let testCategory, validProduct, mockProducts, photoTemplate;
 
-
-
-// jest.spyOn(console, "error").mockImplementation(() => {});
-// jest.spyOn(console, "log").mockImplementation(() => {});
+jest.spyOn(console, "error").mockImplementation(() => {});
+jest.spyOn(console, "log").mockImplementation(() => {});
   
 
 beforeAll(async () => {
