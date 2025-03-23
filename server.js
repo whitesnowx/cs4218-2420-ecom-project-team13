@@ -2,7 +2,7 @@ import express from "express";
 import colors from "colors";
 import dotenv from "dotenv";
 import morgan from "morgan";
-import { connectDB, disconnectDB } from "./config/db.js";
+import connectDB from "./config/db.js";
 import authRoutes from './routes/authRoute.js'
 import categoryRoutes from './routes/categoryRoutes.js'
 import productRoutes from './routes/productRoutes.js'
@@ -34,28 +34,8 @@ app.get('/', (req,res) => {
 
 const PORT = process.env.PORT || 6060;
 
-const server = app.listen(PORT, () => {
+app.listen(PORT, () => {
     console.log(`Server running on ${process.env.DEV_MODE} mode on ${PORT}`.bgCyan.white);
 });
-
-const cleanup = async () => {
-    server.close(async () => {
-        console.log("HTTP server closed");
-        await disconnectDB();
-        process.exit(0); // Exit gracefully
-    });    
-}
-
-// Handle shutdown signals
-process.on("SIGINT", async () => {
-    console.log("SIGINT signal received: closing HTTP server");
-    await cleanup();
-});
-
-process.on("SIGTERM", async () => {
-    console.log("SIGTERM signal received: closing HTTP server");
-    await cleanup();
-});
-
 
 export default app;
