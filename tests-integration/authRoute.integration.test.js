@@ -260,7 +260,7 @@ describe("Auth Route Integration Test", () => {
                 .expect(404);
 
             // Assert
-            expect(response.status).toBe(400);
+            expect(response.status).toBe(404);
             expect(response.body.success).toBe(false);
             expect(response.body.message).toBe("Wrong Email Or Answer");
         });
