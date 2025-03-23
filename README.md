@@ -114,6 +114,9 @@ URL of GitHub workflow for CI: [https://github.com/cs4218/cs4218-2420-ecom-proje
     * `npm run test:frontend`
     * `npm run test:backend`
     * `npm run test:integration`
-2. start sonarqube
-3. update sonar.token in `sonar-project.properties`
-4. run sonar-scanner: `npm run sonarqube`
+2. Start sonarqube (in `cd /path/to/sonarqube`)
+    * linux/macOS: `sonar.sh start`
+    * windows: `StartSonar.bat`
+
+3. Update sonar.token in `sonar-project.properties` with your own account's sonar token
+4. Run sonar-scanner: `npm run sonarqube`
