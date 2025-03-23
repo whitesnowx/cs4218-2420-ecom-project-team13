@@ -206,6 +206,17 @@ describe("update product form functionality", () => {
     });
 
     test("should call handleUpdate() when update button is clicked", async () => {
+        fireEvent.click(screen.getByText("UPDATE PRODUCT"));
+
+        await waitFor(() => {
+            expect(axios.put).toHaveBeenCalledWith(
+                `/api/v1/product/update-product/`,
+                expect.any(FormData)
+            );
+        });
+    });
+
+    test("should show toast success message on successful product update", async () => {
         axios.put.mockResolvedValueOnce({
             data: {
                 success: true,
@@ -224,14 +235,54 @@ describe("update product form functionality", () => {
         expect(toast.success).toHaveBeenCalledWith("Product Updated Successfully");
     });
 
-    test("handleUpdate() fails due to error in PUT request", async () => {
+    test("should show toast error message on failure to update product", async () => {
+        axios.put.mockResolvedValueOnce({
+            data: {
+                success: false,
+                message: "Error in Update Product"
+            }
+        });
+
         fireEvent.click(screen.getByText("UPDATE PRODUCT"));
 
-        expect(consoleLogSpy).toHaveBeenCalled();
-        expect(toast.error).toHaveBeenCalledWith("something went wrong");
+        await waitFor(() => {
+            expect(axios.put).toHaveBeenCalledWith(
+                `/api/v1/product/update-product/`,
+                expect.any(FormData)
+            );
+        });
+
+        expect(toast.error).toHaveBeenCalledWith("Error in Update Product");
+    });
+
+    test("handleUpdate() fails due to error in PUT request", async () => {
+        axios.put.mockRejectedValueOnce(new Error("Network error"));
+
+        fireEvent.click(screen.getByText("UPDATE PRODUCT"));
+
+        await waitFor(() => {
+            expect(axios.put).toHaveBeenCalledWith(
+                `/api/v1/product/update-product/`,
+                expect.any(FormData)
+            );
+        });
+
+        expect(toast.error).toHaveBeenCalledWith("Something went wrong");
     });
 
     test("should call handleDelete() when delete button is clicked", async () => {
+        // simulate window prompt to confirm deletion of product
+        window.prompt = jest.fn(() => "yes");
+        fireEvent.click(screen.getByText("DELETE PRODUCT"));
+
+        await waitFor(() => {
+            expect(axios.delete).toHaveBeenCalledWith(
+                `/api/v1/product/delete-product/`
+            );
+        });
+    });
+    
+    test("should show toast success message if product is deleted successfully", async () => {
         // simulate window prompt to confirm deletion of product
         window.prompt = jest.fn(() => "yes");
 
@@ -250,7 +301,7 @@ describe("update product form functionality", () => {
             );
         });
 
-        expect(toast.success).toHaveBeenCalledWith("Product DEleted Succfully");
+        expect(toast.success).toHaveBeenCalledWith("Product Deleted Successfully");
     });
 
     test("handleDelete() fails with console and toast error messages shown", async () => {
@@ -268,7 +319,7 @@ describe("update product form functionality", () => {
         });
 
         expect(consoleLogSpy).toHaveBeenCalled();
-        expect(toast.error).toHaveBeenCalled();
+        expect(toast.error).toHaveBeenCalledWith("Something went wrong");
     });
 
 });
