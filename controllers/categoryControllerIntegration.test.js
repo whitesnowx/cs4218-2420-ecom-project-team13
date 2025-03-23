@@ -6,7 +6,6 @@ import { categoryControlller, createCategoryController, deleteCategoryCOntroller
 import categoryModel from "../models/categoryModel.js";
 import slugify from "slugify";
 import { expect } from "@playwright/test";
-import { describe } from "node:test";
 import { jest } from "@jest/globals";
 
 let app;
@@ -243,7 +242,7 @@ describe("Integration Tests for Category Controllers", () => {
   });
 
 
-  describe("deleteCategoryController", async () => {
+  describe("deleteCategoryController", () => {
     test("should delete the category successfully", async () => {
         const category = await categoryModel.create({ name: "Books", slug: slugify("Books")});
 
