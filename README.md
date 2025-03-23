@@ -59,15 +59,15 @@ URL of GitHub workflow for CI: [https://github.com/cs4218/cs4218-2420-ecom-proje
 - Runs the app in the development mode.
 - Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-`npm run test` - Runs frontend and backend tests, one after the other, and the output goes to the terminal.\
+`npm run test` - Runs frontend and backend tests, one after the other, and the output goes to the terminal.
 
 `npm run test:backend` - Runs backend tests only and the output goes to the terminal.\
 `npm run test:frontend` - Runs frontend tests only and the output goes to the terminal.\
-`npm run test:integration` - Runs integration tests in the backend only and the output goes to the terminal.\
+`npm run test:integration` - Runs integration tests in the backend only and the output goes to the terminal.
 
 `npm run test:backend-no-cc` - Runs backend tests only and the output goes to the terminal without coverage.\
 `npm run test:frontend-no-cc` - Runs frontend tests only and the output goes to the terminal without coverage.\
-`npm run test:integration-no-cc` - Runs integration tests in the backend only and the output goes to the terminal without coverage.\
+`npm run test:integration-no-cc` - Runs integration tests in the backend only and the output goes to the terminal without coverage.
 
 
 > [!NOTE]
