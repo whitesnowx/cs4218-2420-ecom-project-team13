@@ -44,7 +44,7 @@ describe("products page renders properly", () => {
             data: {
                 success: true,
                 counTotal: 2,
-                message: "ALlProducts ",
+                message: "AllProducts ",
                 products: [
                     {
                         _id: 1,
@@ -94,7 +94,7 @@ describe("products page renders properly", () => {
         );
         
         await waitFor(() => {
-            expect(toast.error).toHaveBeenCalledWith("Someething Went Wrong");
+            expect(toast.error).toHaveBeenCalledWith("Something went wrong");
         });
     });
 });
