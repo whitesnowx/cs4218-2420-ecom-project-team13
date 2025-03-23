@@ -125,7 +125,7 @@ describe("Auth Controller", () => {
       await registerController(req, res);
 
       // Assert
-      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.status).toHaveBeenCalledWith(409);
       expect(res.send).toHaveBeenCalledWith({
         success: false,
         message: "Already registered. Please login",
