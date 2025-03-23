@@ -2,7 +2,6 @@ import { test, expect } from "@playwright/test";
 import userModel from "../models/userModel";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import { MongoMemoryServer } from "mongodb-memory-server";
 
 dotenv.config({ path: ".env" });
 
@@ -21,18 +20,10 @@ const user = {
     answer: "Soccer"
 }
 
-let mongoServer;
-let uri
-
 test.describe("Register page", () => {
-    test.beforeAll(async () => {
-        mongoServer = await MongoMemoryServer.create();
-        uri = await mongoServer.getUri();
-    });
-
     test.beforeEach(async ({ page }) => {
-        await mongoose.connect(uri);
-        await mongoose.connection.createCollection("users");
+        await mongoose.connect(process.env.MONGO_URL);
+        await mongoose.connection.createCollection('users');
 
         await page.goto('http://localhost:3000/');
         await page.waitForURL("http://localhost:3000/");
@@ -42,11 +33,6 @@ test.describe("Register page", () => {
         await userModel.deleteOne({ email: user.email });
         await mongoose.disconnect();
     });
-
-    test.afterAll(async () => {
-        await mongoose.connection.close();
-        await mongoServer.stop();
-    })
 
     test("should register user successfully", async ({ page }) => {
         // Go to Register Page
