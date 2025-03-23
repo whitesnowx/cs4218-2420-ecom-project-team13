@@ -46,6 +46,35 @@ describe("Payment Integration Tests", () => {
         // console.log("--> Login Response:", authResponse.body);
         // console.log("--> Status Code:", authResponse.status); // 200 | Success
         token = authResponse.body.token; 
+
+        const category = new categoryModel({
+          name: "Books",
+          description: "All types of books"
+        });
+        await category.save();
+        
+        const product1 = new productModel({
+          name: "Textbook",
+          slug: "textbook",
+          description: "A comprehensive textbook",
+          price: 79.99,
+          category: category._id,
+          quantity: 100,
+          shipping: true
+        })
+        const product2 = new productModel({
+          name: "Notebook",
+          slug: "notebook",
+          description: "A handy notebook",
+          price: 9.99,
+          category: category._id,
+          quantity: 20,
+          shipping: true
+        })
+        await product1.save();
+        await product2.save();
+        
+        cart = [product1, product2];
       });
 
   afterAll(async () => {
@@ -64,34 +93,7 @@ describe("Payment Integration Tests", () => {
   });
 
   it("should process a payment successfully", async () => {
-    const category = new categoryModel({
-      name: "Books",
-      description: "All types of books"
-    });
-    await category.save();
     
-    const product1 = new productModel({
-      name: "Textbook",
-      slug: "textbook",
-      description: "A comprehensive textbook",
-      price: 79.99,
-      category: category._id,
-      quantity: 100,
-      shipping: true
-    })
-    const product2 = new productModel({
-      name: "Notebook",
-      slug: "notebook",
-      description: "A handy notebook",
-      price: 9.99,
-      category: category._id,
-      quantity: 20,
-      shipping: true
-    })
-    await product1.save();
-    await product2.save();
-    
-    cart = [product1, product2];
     
     const tokenResponse = await request(app)
         .get("/api/v1/product/braintree/token")
