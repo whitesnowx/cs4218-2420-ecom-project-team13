@@ -12,7 +12,8 @@ export default {
 
   // which test to run
   testMatch: [
-    "<rootDir>/tests-integration/*.integration.test.js"
+    "<rootDir>/tests-integration/*.integration.test.js",
+    "<rootDir>/controllers/*Integration.test.js"
   ],
 
   // configure dotenv file to .env.test
@@ -21,7 +22,21 @@ export default {
   // jest code coverage
   collectCoverage: true,
   collectCoverageFrom: [
-    "**/*.integration.test.js"
+    "client/src/components/Form/**",
+    "client/src/components/**",
+    "client/src/context/**",
+    "client/src/hooks/**",
+    "client/src/pages/admin/**",
+    "client/src/pages/Auth/**",
+    "client/src/pages/user/**",
+    "client/src/pages/**",
+    "controllers/**",
+    "config/**",
+    "helpers/**",
+    "middlewares/**",
+    "models/**",
+    "routes/**",
+    "!**/*.test.js"
   ],
   coverageThreshold: {
     global: {
@@ -30,4 +45,3 @@ export default {
     },
   },
 };
-

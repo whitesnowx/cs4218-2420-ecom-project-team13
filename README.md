@@ -51,7 +51,7 @@ URL of GitHub workflow for CI: [https://github.com/cs4218/cs4218-2420-ecom-proje
     BRAINTREE_PRIVATE_KEY = <insert braintree private key>
     ```
 
-7. Create a `.env.integration.test` with your sandboxed and testing environment variables under the root directory.
+7. Create a `sonar-project.properties` with your sandboxed and testing environment variables under the root directory.
     ```ml
     # SonarQube server settings
     sonar.host.url=http://localhost:9000
@@ -63,7 +63,7 @@ URL of GitHub workflow for CI: [https://github.com/cs4218/cs4218-2420-ecom-proje
     sonar.projectVersion=1.0
 
     # Analysis settings
-    sonar.sources=client
+    sonar.sources=.
 
     # Coverage report path
     sonar.javascript.lcov.reportPaths=coverage/lcov.info
@@ -74,7 +74,7 @@ URL of GitHub workflow for CI: [https://github.com/cs4218/cs4218-2420-ecom-proje
     # Limit analysis to JavaScript files in the specifiee sources
     sonar.inclusions=**/*.js
 
-    sonar.exclusions=**/*.test.js
+    sonar.exclusions=**/*.test.js, **/*.config.js, **/*.setup.js
     ```
 
 ### Usage
