@@ -28,7 +28,6 @@ describe("Order Model Integration Test", () => {
       await mongoose.connect(uri);
 
       await mongoose.connection.createCollection("orders");
-      await mongoose.connection.createCollection("products");
     } catch (error) {
       console.error("Error setting up MongoDB Memory Server:", error);
     }
